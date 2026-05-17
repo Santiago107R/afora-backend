@@ -30,5 +30,5 @@ export class Aula {
         () => DocenteAula,
         (docenteAula) => docenteAula.aula,
     )
-    docenteAula: DocenteAula;
+    docenteAula: DocenteAula[];
 }

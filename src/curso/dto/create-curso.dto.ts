@@ -6,7 +6,7 @@ export class CreateCursoDto {
     name: string;
 
     @IsString()
-    @IsIn(['mañana', 'tarde', 'verpertino'])
+    @IsIn(['mañana', 'tarde', 'vespertino'])
     shift: string;
 
     @IsNumber()

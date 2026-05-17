@@ -22,7 +22,7 @@ export class CursoService {
     try {
       await this.cursoRepository.save(curso);
 
-      return curso;
+      return this.findOne(curso.id);
     } catch (error) {
       this.handleError(error);
     }
@@ -35,6 +35,9 @@ export class CursoService {
     const [cursos, total] = await this.cursoRepository.findAndCount({
       take: limit,
       skip: offset,
+      relations: {
+        docenteAula: true,
+      },
       where: {
         name: query ? ILike(`%${query}%`) : undefined
       }
@@ -50,7 +53,12 @@ export class CursoService {
   }
 
   async findOne(id: string) {
-    const curso = await this.cursoRepository.findOneBy({ id });
+    const curso = await this.cursoRepository.findOne({
+      where: { id },
+      relations: {
+        docenteAula: true,
+      },
+    });
 
     if (!curso) throw new NotFoundException(`Curso with id ${id} not found`);
 
@@ -68,7 +76,7 @@ export class CursoService {
     try {
       await this.cursoRepository.save(curso);
 
-      return curso;
+      return this.findOne(id);
     } catch (error) {
       this.handleError(error);
     }
@@ -76,7 +84,7 @@ export class CursoService {
 
   async remove(id: string) {
     const curso = await this.findOne(id);
-    
+
     await this.cursoRepository.remove(curso);
 
     return `DELETE WAS EXECUTED SUCCESSFULLY`;

@@ -5,7 +5,7 @@ import { ILike, Repository } from 'typeorm';
 import { Aula } from './entities/aula.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { State } from './interfaces/state-values';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class AulaService {
@@ -25,7 +25,7 @@ export class AulaService {
     try {
       await this.AulaRepository.save(aula)
 
-      return { ...aula }
+      return this.findOne(aula.id);
     } catch (error) {
       this.handleError(error)
     }
@@ -48,6 +48,9 @@ export class AulaService {
       const [aulas, total] = await this.AulaRepository.findAndCount({
         take: limit,
         skip: offset,
+        relations: {
+          docenteAula: true,
+        },
         where,
       })
 
@@ -64,7 +67,12 @@ export class AulaService {
   }
 
   async findOne(id: string) {
-    const aula = await this.AulaRepository.findOneBy({ id })
+    const aula = await this.AulaRepository.findOne({
+      where: { id },
+      relations: {
+        docenteAula: true,
+      },
+    });
 
     if (!aula) throw new NotFoundException(`Aula with id or name ${id} not found`)
 
@@ -79,7 +87,7 @@ export class AulaService {
     try {
       await this.AulaRepository.save(aula)
 
-      return aula
+      return this.findOne(id);
     } catch (error) {
       this.handleError(error)
     }

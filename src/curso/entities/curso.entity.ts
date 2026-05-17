@@ -21,5 +21,5 @@ export class Curso {
         () => DocenteAula,
         (docenteAula) => docenteAula.curso,
     )
-    docenteAula: DocenteAula;
+    docenteAula: DocenteAula[];
 }

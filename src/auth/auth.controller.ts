@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, UseGuards, Query, Param, ParseUUIDPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
@@ -6,6 +6,7 @@ import { GetUser } from './decorators';
 import { User } from './entities/user.entity';
 import { type Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import type { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -70,6 +71,16 @@ export class AuthController {
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     return { message: 'Sesión cerrada correctamente' };
+  }
+
+  @Get('user')
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.authService.findAll(paginationDto);
+  }
+
+  @Get('user/:id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authService.findOne(id);
   }
 
 }

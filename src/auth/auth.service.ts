@@ -7,6 +7,7 @@ import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { jwtPayload } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-auth.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class AuthService {
@@ -72,8 +73,17 @@ export class AuthService {
     return token;
   }
 
+  async findAll(paginationDto: PaginationDto) {
+    
+  }
+
   async findOne(id: string) {
-    const user = this.userRespository.findOneBy({id})
+    const user = this.userRespository.findOne({
+      where: {id},
+      relations: {
+        docenteAula: true,
+      },
+    });
 
     if (!user) throw new NotFoundException(`User with id ${id} not found`)
 
