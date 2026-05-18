@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAulaDto } from './dto/create-aula.dto';
 import { UpdateAulaDto } from './dto/update-aula.dto';
 import { ILike, Repository } from 'typeorm';
@@ -6,11 +6,10 @@ import { Aula } from './entities/aula.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { State } from './interfaces/state-values';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { handleDbError } from 'src/common/utils/handle-errors';
 
 @Injectable()
 export class AulaService {
-
-  private logger = new Logger
 
   constructor(
     @InjectRepository(Aula)
@@ -27,7 +26,7 @@ export class AulaService {
 
       return this.findOne(aula.id);
     } catch (error) {
-      this.handleError(error)
+      handleDbError(error)
     }
   }
 
@@ -62,7 +61,7 @@ export class AulaService {
         aulas
       }
     } catch (error) {
-      this.handleError(error)
+      handleDbError(error)
     }
   }
 
@@ -74,7 +73,7 @@ export class AulaService {
       },
     });
 
-    if (!aula) throw new NotFoundException(`Aula with id or name ${id} not found`)
+    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`)
 
     return aula
   }
@@ -82,14 +81,14 @@ export class AulaService {
   async update(id: string, updateAulaDto: UpdateAulaDto) {
     const aula = await this.AulaRepository.preload({ id, ...updateAulaDto })
 
-    if (!aula) throw new NotFoundException(`Aula with id or name ${id} not found`)
+    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`)
 
     try {
       await this.AulaRepository.save(aula)
 
       return this.findOne(id);
     } catch (error) {
-      this.handleError(error)
+      handleDbError(error)
     }
 
   }
@@ -100,13 +99,5 @@ export class AulaService {
     await this.AulaRepository.remove(aula)
 
     return `DELETE HAS BEEN SUCCESSFUL`;
-  }
-
-  private handleError(error: any) {
-    if (error.code === "23505")
-      throw new BadRequestException(error.detail)
-
-    this.logger.error(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs')
   }
 }

@@ -18,7 +18,6 @@ export class CreateAuthDto {
     @IsPositive()
     DNI?: number;
 
-    @IsString()
     @IsArray()
     roles: string[];
 }

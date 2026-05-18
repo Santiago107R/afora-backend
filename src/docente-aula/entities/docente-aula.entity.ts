@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 't
 import { User } from '../../auth/entities/user.entity';
 import { Aula } from '../../aula/entities/aula.entity';
 import { Curso } from '../../curso/entities/curso.entity';
+import { Materia } from '../../materia/entities/materia.entity';
 
 @Entity()
 export class DocenteAula {
@@ -31,6 +32,14 @@ export class DocenteAula {
     )
     @JoinColumn({ name: 'cursoId' })
     curso: Curso;
+
+    @ManyToOne(
+        () => Materia,
+        (materia) => materia.docenteAula,
+        { eager: true, nullable: false },
+    )
+    @JoinColumn({ name: 'materiaId' })
+    materia: Curso;
 
     @Column('text')
     dia: string;

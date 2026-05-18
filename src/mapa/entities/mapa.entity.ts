@@ -9,4 +9,7 @@ export class Mapa {
         unique: true,
     })
     name: string;
+
+    @Column('text')
+    url: string;
 }

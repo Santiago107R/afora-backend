@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { DocenteAula } from '../../docente-aula/entities/docente-aula.entity';
 
 @Entity()
 export class Materia {
@@ -9,4 +10,10 @@ export class Materia {
         unique: true,
     })
     name: string;
+
+    @OneToMany(
+        () => DocenteAula,
+        (docenteAula) => docenteAula.materia,
+    )
+    docenteAula: DocenteAula[];
 }

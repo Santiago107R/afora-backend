@@ -1,16 +1,15 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, Query } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Curso } from './entities/curso.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { error } from 'console';
+import { handleDbError } from 'src/common/utils/handle-errors';
 
 @Injectable()
 export class CursoService {
 
-  private logger = new Logger
   constructor(
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
@@ -24,7 +23,7 @@ export class CursoService {
 
       return this.findOne(curso.id);
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
 
   }
@@ -78,7 +77,7 @@ export class CursoService {
 
       return this.findOne(id);
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
   }
 
@@ -90,11 +89,4 @@ export class CursoService {
     return `DELETE WAS EXECUTED SUCCESSFULLY`;
   }
 
-  private handleError(error: any) {
-    if (error.code === "23505")
-      throw new BadRequestException(error.detail)
-
-    this.logger.error(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs')
-  }
 }

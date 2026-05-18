@@ -7,6 +7,7 @@ import { DocenteAula } from './entities/docente-aula.entity';
 import { User } from '../auth/entities/user.entity';
 import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
+import { handleDbError } from 'src/common/utils/handle-errors';
 
 @Injectable()
 export class DocenteAulaService {
@@ -53,7 +54,7 @@ export class DocenteAulaService {
             await this.docenteAulaRepository.save(docenteAula);
             return docenteAula;
         } catch (error) {
-            this.handleError(error);
+            handleDbError(error);
         }
     }
 
@@ -108,7 +109,7 @@ export class DocenteAulaService {
             await this.docenteAulaRepository.save(docenteAula);
             return docenteAula;
         } catch (error) {
-            this.handleError(error);
+            handleDbError(error);
         }
     }
 
@@ -116,11 +117,5 @@ export class DocenteAulaService {
         const docenteAula = await this.findOne(id);
         await this.docenteAulaRepository.remove(docenteAula);
         return { message: 'Registro eliminado correctamente' };
-    }
-
-    private handleError(error: any) {
-        if (error.code === '23505') throw new BadRequestException(error.detail);
-        this.logger.error(error);
-        throw new InternalServerErrorException('Error inesperado, revisa los logs del servidor');
     }
 }

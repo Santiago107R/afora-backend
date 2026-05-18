@@ -1,5 +1,5 @@
 export enum State {
     AVAILABLE = 'available',
-    UNAVAILABLE = 'unavailable',
+    MAINTENANCE = 'maintenance',
     BUSY = 'busy',
 }

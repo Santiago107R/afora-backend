@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMateriaDto } from './dto/create-materia.dto';
 import { UpdateMateriaDto } from './dto/update-materia.dto';
 import { ILike, Repository } from 'typeorm';
 import { Materia } from './entities/materia.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { handleDbError } from 'src/common/utils/handle-errors';
 
 @Injectable()
 export class MateriaService {
 
-  private logger = new Logger
   constructor(
     @InjectRepository(Materia)
     private readonly materiaRepository: Repository<Materia>
@@ -21,9 +21,9 @@ export class MateriaService {
     try {
       await this.materiaRepository.save(materia);
 
-      return materia
+      return this.findOne(materia.id);
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
 
   }
@@ -33,6 +33,9 @@ export class MateriaService {
 
     const [materias, total] = await this.materiaRepository.findAndCount({
       take: limit,
+      relations: {
+        docenteAula: true,
+      },
       skip: offset,
       where: {
         name: query ? ILike(`%${query}%`) : undefined
@@ -49,7 +52,12 @@ export class MateriaService {
   }
 
   async findOne(id: string) {
-    const materia = await this.materiaRepository.findOneBy({ id });
+    const materia = await this.materiaRepository.findOne({
+      where: { id },
+      relations: {
+        docenteAula: true,
+      },
+    });
 
     if (!materia) throw new NotFoundException(`Materia with id ${id} not found`);
 
@@ -67,9 +75,9 @@ export class MateriaService {
     try {
       await this.materiaRepository.save(materia);
 
-      return materia;
+      return this.findOne(id);
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
   }
 
@@ -81,11 +89,4 @@ export class MateriaService {
     return `DELETE WAS EXECUTED SUCCESSFULLY`;
   }
 
-  private handleError(error: any) {
-    if (error.code === "23505")
-      throw new BadRequestException(error.detail)
-
-    this.logger.error(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs')
-  }
 }

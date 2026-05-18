@@ -1,13 +1,16 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Raw, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { jwtPayload } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { handleDbError } from 'src/common/utils/handle-errors';
+import { UpdateAuthDto } from './dto/update-user-auth.dto';
+import { UpdateAulaDto } from '../aula/dto/update-aula.dto';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +37,7 @@ export class AuthService {
         token: this.getJwtToken({ id: user.id })
       }
     } catch (error) {
-      this.handleDBErrors(error)
+      handleDbError(error)
     }
   }
 
@@ -74,12 +77,46 @@ export class AuthService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    
+    const { limit = 10, offset = 0, query = undefined, roles = undefined } = paginationDto;
+
+    const where: any = {};
+
+    if (query !== undefined) {
+      where.name = ILike(`%${query}%`);
+    }
+
+    if (roles && roles.length > 0) {
+      const postgresArray = `{${roles.join(',')}}`;
+
+      where.roles = Raw((alias) => `${alias} && :roles`, { roles: postgresArray });
+    }
+
+    try {
+      const [users, total] = await this.userRespository.findAndCount({
+        take: limit,
+        skip: offset,
+        relations: {
+          docenteAula: true,
+        },
+        where
+      })
+
+      const pages = limit > 0 ? Math.ceil(total / limit) : 0;
+
+      return {
+        total,
+        pages,
+        users,
+      }
+    } catch (error) {
+      handleDbError(error);
+    }
+
   }
 
   async findOne(id: string) {
-    const user = this.userRespository.findOne({
-      where: {id},
+    const user = await this.userRespository.findOne({
+      where: { id },
       relations: {
         docenteAula: true,
       },
@@ -88,15 +125,31 @@ export class AuthService {
     if (!user) throw new NotFoundException(`User with id ${id} not found`)
 
     return user
-  } 
-
-  private handleDBErrors(error: any): never {
-    if (error.code === "23505")
-      throw new BadRequestException(error.detail)
-
-    console.log(error)
-
-    throw new InternalServerErrorException('Please check server logs')
-
   }
+
+  async update(id: string, updateAuthDto: UpdateAuthDto) {
+    const user = await this.userRespository.preload({
+      id,
+      ...updateAuthDto,
+    })
+
+    if (!user) throw new NotFoundException(`User with id ${id} not found`)
+
+    try {
+      await this.userRespository.save(user);
+
+      return this.findOne(id);
+    } catch (error) {
+      handleDbError(error);
+    }
+  }
+
+  async remove(id: string) {
+    const user = await this.findOne(id);
+
+    await this.userRespository.remove(user)
+
+    return `DELETE HAS BEEN SUCCESSFUL`;
+  }
+
 }

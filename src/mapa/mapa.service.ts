@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMapaDto } from './dto/create-mapa.dto';
 import { UpdateMapaDto } from './dto/update-mapa.dto';
 import { ILike, Repository } from 'typeorm';
 import { Mapa } from './entities/mapa.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { handleDbError } from 'src/common/utils/handle-errors';
 
 @Injectable()
 export class MapaService {
 
-  private logger = new Logger
   constructor(
     @InjectRepository(Mapa)
     private readonly mapaRepository: Repository<Mapa>
@@ -23,7 +23,7 @@ export class MapaService {
 
       return mapa;
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
   }
 
@@ -68,7 +68,7 @@ export class MapaService {
 
       return mapa;
     } catch (error) {
-      this.handleError(error);
+      handleDbError(error);
     }
   }
 
@@ -80,11 +80,4 @@ export class MapaService {
     return `DELETE WAS EXECUTED SUCCESSFULLY`;
   }
 
-  private handleError(error: any) {
-    if (error.code === "23505")
-      throw new BadRequestException(error.detail)
-
-    this.logger.error(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs')
-  }
 }

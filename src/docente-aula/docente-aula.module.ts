@@ -6,11 +6,11 @@ import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
 import { DocenteAulaController } from './docente-aula.controller';
 import { DocenteAulaService } from './docente-aula.service';
-import { AuthModule } from 'src/auth/auth.module';
+import { Materia } from '../materia/entities/materia.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([DocenteAula, User, Aula, Curso]),
+        TypeOrmModule.forFeature([DocenteAula, User, Aula, Curso, Materia]),
     ],
     controllers: [DocenteAulaController],
     providers: [DocenteAulaService],

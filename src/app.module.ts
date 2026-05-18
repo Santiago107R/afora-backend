@@ -8,6 +8,7 @@ import { DocenteAulaModule } from './docente-aula/docente-aula.module';
 import { FilesModule } from './files/files.module';
 import { MateriaModule } from './materia/materia.module';
 import { MapaModule } from './mapa/mapa.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,19 +30,22 @@ import { MapaModule } from './mapa/mapa.module';
       inject: [ConfigService],
     }),
 
-    AulaModule,
+    AuthModule,
 
     CommonModule,
+    
+    AulaModule,
 
     CursoModule,
 
+    MateriaModule,
+    
+    MapaModule,
+    
     DocenteAulaModule,
-
+    
     FilesModule,
 
-    MateriaModule,
-
-    MapaModule,
   ],
   controllers: [],
 })

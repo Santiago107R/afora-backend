@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res, UseGuards, Query, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, UseGuards, Query, Param, ParseUUIDPipe, Patch, Delete } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
@@ -6,7 +6,8 @@ import { GetUser } from './decorators';
 import { User } from './entities/user.entity';
 import { type Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import type { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import type { UpdateAuthDto } from './dto/update-user-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -81,6 +82,16 @@ export class AuthController {
   @Get('user/:id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.authService.findOne(id);
+  }
+
+  @Patch('user/:id')
+  update(@Param('id', ParseUUIDPipe) id: string, updateAuthDto: UpdateAuthDto) {
+    this.authService.update(id, updateAuthDto);
+  }
+
+  @Delete('user/:id')
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    this.authService.remove(id);
   }
 
 }

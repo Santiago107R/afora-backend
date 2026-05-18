@@ -2,11 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query
 import { MapaService } from './mapa.service';
 import { CreateMapaDto } from './dto/create-mapa.dto';
 import { UpdateMapaDto } from './dto/update-mapa.dto';
-import type { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('mapa')
 export class MapaController {
-  constructor(private readonly mapaService: MapaService) {}
+  constructor(private readonly mapaService: MapaService) { }
 
   @Post()
   create(@Body() createMapaDto: CreateMapaDto) {
