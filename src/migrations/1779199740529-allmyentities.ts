@@ -15,7 +15,17 @@ export class Allmyentities1779199740529 implements MigrationInterface {
             CONSTRAINT "UQ_8e8d9b8e5b2bbbe236bd2abb5a9" UNIQUE ("name")
         )`);
         await queryRunner.query(`ALTER TABLE IF EXISTS "user" ALTER COLUMN "roles" SET DEFAULT '{docente}'`);
-        await queryRunner.query(`ALTER TYPE IF EXISTS "public"."aula_state_enum" RENAME TO "aula_state_enum_old"`);
+        await queryRunner.query(`DO $$ BEGIN
+            IF EXISTS (
+                SELECT 1
+                FROM pg_type t
+                JOIN pg_namespace n ON n.oid = t.typnamespace
+                WHERE t.typname = 'aula_state_enum'
+                    AND n.nspname = 'public'
+            ) THEN
+                ALTER TYPE "public"."aula_state_enum" RENAME TO "aula_state_enum_old";
+            END IF;
+        END $$;`);
         await queryRunner.query(`CREATE TYPE IF NOT EXISTS "public"."aula_state_enum" AS ENUM('available', 'maintenance', 'busy')`);
         await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" DROP DEFAULT`);
         await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum" USING "state"::"text"::"public"."aula_state_enum"`);
