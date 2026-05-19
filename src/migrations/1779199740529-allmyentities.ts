@@ -4,6 +4,7 @@ export class Allmyentities1779199740529 implements MigrationInterface {
     name = 'Allmyentities1779199740529'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        // 1. Crear la tabla (IF NOT EXISTS es válido aquí en PostgreSQL)
         await queryRunner.query(`CREATE TABLE IF NOT EXISTS "user" (
             "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
             "name" text NOT NULL,
@@ -14,26 +15,26 @@ export class Allmyentities1779199740529 implements MigrationInterface {
             CONSTRAINT "PK_8e8d9b8e5b2bbbe236bd2abb5a9" PRIMARY KEY ("id"),
             CONSTRAINT "UQ_8e8d9b8e5b2bbbe236bd2abb5a9" UNIQUE ("name")
         )`);
-        await queryRunner.query(`ALTER TABLE IF EXISTS "user" ALTER COLUMN "roles" SET DEFAULT '{docente}'`);
-        await queryRunner.query(`DO $$ BEGIN
-            IF EXISTS (
-                SELECT 1
-                FROM pg_type t
-                JOIN pg_namespace n ON n.oid = t.typnamespace
-                WHERE t.typname = 'aula_state_enum'
-                    AND n.nspname = 'public'
-            ) THEN
-                ALTER TYPE "public"."aula_state_enum" RENAME TO "aula_state_enum_old";
-            END IF;
-        END $$;`);
-        await queryRunner.query(`CREATE TYPE IF NOT EXISTS "public"."aula_state_enum" AS ENUM('available', 'maintenance', 'busy')`);
-        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum" USING "state"::"text"::"public"."aula_state_enum"`);
-        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" SET DEFAULT 'available'`);
-        await queryRunner.query(`DROP TYPE IF EXISTS "public"."aula_state_enum_old"`);
+
+        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "roles" SET DEFAULT '{docente}'`);
+
+        // 2. Renombrar el enum viejo (Sin IF EXISTS)
+        await queryRunner.query(`ALTER TYPE "public"."aula_state_enum" RENAME TO "aula_state_enum_old"`);
+
+        // 3. Crear el enum nuevo (Sin IF NOT EXISTS, PostgreSQL no lo soporta en tipos)
+        await queryRunner.query(`CREATE TYPE "public"."aula_state_enum" AS ENUM('available', 'maintenance', 'busy')`);
+
+        // 4. Actualizar la columna para usar el nuevo enum
+        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" DROP DEFAULT`);
+        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum" USING "state"::"text"::"public"."aula_state_enum"`);
+        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" SET DEFAULT 'available'`);
+
+        // 5. Eliminar el enum viejo
+        await queryRunner.query(`DROP TYPE "public"."aula_state_enum_old"`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        // Revertir los cambios en caso de rollback
         await queryRunner.query(`CREATE TYPE "public"."aula_state_enum_old" AS ENUM('available', 'unavailable', 'busy')`);
         await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" DROP DEFAULT`);
         await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum_old" USING "state"::"text"::"public"."aula_state_enum_old"`);
@@ -42,5 +43,4 @@ export class Allmyentities1779199740529 implements MigrationInterface {
         await queryRunner.query(`ALTER TYPE "public"."aula_state_enum_old" RENAME TO "aula_state_enum"`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "roles" SET DEFAULT '{user}'`);
     }
-
 }
