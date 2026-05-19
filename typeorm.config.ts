@@ -2,14 +2,19 @@ import * as dotenv from "dotenv";
 import { join } from "path";
 import { DataSource } from "typeorm";
 
-dotenv.config();
+const envFile = join(__dirname, '.env');
+dotenv.config({ path: envFile });
 
 const stage = process.env.STAGE || 'dev';
+const dbHost = stage === 'dev'
+    ? 'localhost'
+    : process.env.DB_HOST || 'localhost';
+const dbPort = process.env.DB_PORT ? +process.env.DB_PORT : 5432;
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: stage === 'dev' ? 'localhost' : process.env.DB_HOST,
-    port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
+    host: dbHost,
+    port: dbPort,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
