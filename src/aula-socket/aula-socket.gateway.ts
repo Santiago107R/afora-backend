@@ -19,6 +19,11 @@ export class AulaSocketGateway {
     return this.aulaSocketService.findAll(paginationDto);
   }
 
+  @SubscribeMessage('findOneAulaSocket')
+  async findOne(@MessageBody() id: string) {
+    return this.aulaSocketService.findOne(id);
+  }
+
   async broadcastAulas(paginationDto?: any) {
     const aulas = await this.aulaSocketService.findAll(paginationDto);
     this.server.emit('aulasUpdated', aulas);

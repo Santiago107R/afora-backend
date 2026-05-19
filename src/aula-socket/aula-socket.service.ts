@@ -11,4 +11,8 @@ export class AulaSocketService {
       paginationDto ?? { limit: 10, offset: 0 },
     );
   }
+
+  async findOne(id: string) {
+    return this.aulaService.findOne(id);
+  }
 }
