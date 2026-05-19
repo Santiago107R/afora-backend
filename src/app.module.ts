@@ -27,6 +27,11 @@ import { AulaSocketModule } from './aula-socket/aula-socket.module';
         autoLoadEntities: true,
         synchronize: false,
         ssl: true,
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
       inject: [ConfigService],
     }),
