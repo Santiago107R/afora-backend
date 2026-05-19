@@ -14,13 +14,13 @@ export class Allmyentities1779199740529 implements MigrationInterface {
             CONSTRAINT "PK_8e8d9b8e5b2bbbe236bd2abb5a9" PRIMARY KEY ("id"),
             CONSTRAINT "UQ_8e8d9b8e5b2bbbe236bd2abb5a9" UNIQUE ("name")
         )`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "roles" SET DEFAULT '{docente}'`);
-        await queryRunner.query(`ALTER TYPE "public"."aula_state_enum" RENAME TO "aula_state_enum_old"`);
-        await queryRunner.query(`CREATE TYPE "public"."aula_state_enum" AS ENUM('available', 'maintenance', 'busy')`);
-        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" DROP DEFAULT`);
-        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum" USING "state"::"text"::"public"."aula_state_enum"`);
-        await queryRunner.query(`ALTER TABLE "aula" ALTER COLUMN "state" SET DEFAULT 'available'`);
-        await queryRunner.query(`DROP TYPE "public"."aula_state_enum_old"`);
+        await queryRunner.query(`ALTER TABLE IF EXISTS "user" ALTER COLUMN "roles" SET DEFAULT '{docente}'`);
+        await queryRunner.query(`ALTER TYPE IF EXISTS "public"."aula_state_enum" RENAME TO "aula_state_enum_old"`);
+        await queryRunner.query(`CREATE TYPE IF NOT EXISTS "public"."aula_state_enum" AS ENUM('available', 'maintenance', 'busy')`);
+        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" DROP DEFAULT`);
+        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" TYPE "public"."aula_state_enum" USING "state"::"text"::"public"."aula_state_enum"`);
+        await queryRunner.query(`ALTER TABLE IF EXISTS "aula" ALTER COLUMN "state" SET DEFAULT 'available'`);
+        await queryRunner.query(`DROP TYPE IF EXISTS "public"."aula_state_enum_old"`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
