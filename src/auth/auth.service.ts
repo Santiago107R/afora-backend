@@ -10,7 +10,6 @@ import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { handleDbError } from 'src/common/utils/handle-errors';
 import { UpdateAuthDto } from './dto/update-user-auth.dto';
-import { UpdateAulaDto } from '../aula/dto/update-aula.dto';
 
 @Injectable()
 export class AuthService {
@@ -98,7 +97,7 @@ export class AuthService {
         relations: {
           docenteAula: true,
         },
-        where
+        where,
       })
 
       const pages = limit > 0 ? Math.ceil(total / limit) : 0;

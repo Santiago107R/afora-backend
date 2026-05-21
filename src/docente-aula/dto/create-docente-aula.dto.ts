@@ -9,6 +9,9 @@ export class CreateDocenteAulaDto {
 
     @IsUUID()
     cursoId: string;
+    
+    @IsUUID()
+    materiaId: string;
 
     @IsString()
     @IsNotEmpty()

@@ -8,6 +8,7 @@ import { User } from '../auth/entities/user.entity';
 import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
 import { handleDbError } from 'src/common/utils/handle-errors';
+import { Materia } from 'src/materia/entities/materia.entity';
 
 @Injectable()
 export class DocenteAulaService {
@@ -25,15 +26,19 @@ export class DocenteAulaService {
 
         @InjectRepository(Curso)
         private readonly cursoRepository: Repository<Curso>,
+
+        @InjectRepository(Materia)
+        private readonly materiaRepository: Repository<Materia>,
     ) { }
 
     async create(createDocenteAulaDto: CreateDocenteAulaDto) {
-        const { userId, aulaId, cursoId, ...rest } = createDocenteAulaDto;
+        const { userId, aulaId, cursoId, materiaId, ...rest } = createDocenteAulaDto;
 
-        const [user, aula, curso] = await Promise.all([
+        const [user, aula, curso, materia] = await Promise.all([
             this.userRepository.findOneBy({ id: userId }),
             this.aulaRepository.findOneBy({ id: aulaId }),
             this.cursoRepository.findOneBy({ id: cursoId }),
+            this.materiaRepository.findOneBy({ id: materiaId })
         ]);
 
         if (!user) throw new BadRequestException(`User no encontrado con id ${userId}`);
@@ -42,11 +47,13 @@ export class DocenteAulaService {
         }
         if (!aula) throw new BadRequestException(`Aula no encontrada con id ${aulaId}`);
         if (!curso) throw new BadRequestException(`Curso no encontrado con id ${cursoId}`);
+        if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
 
         const docenteAula = this.docenteAulaRepository.create({
             user,
             aula,
             curso,
+            materia,
             ...rest,
         });
 
@@ -71,11 +78,12 @@ export class DocenteAulaService {
     }
 
     async update(id: string, updateDocenteAulaDto: UpdateDocenteAulaDto) {
-        const { userId, aulaId, cursoId, ...rest } = updateDocenteAulaDto;
+        const { userId, aulaId, cursoId, materiaId, ...rest } = updateDocenteAulaDto;
 
         let user: User | null = null;
         let aula: Aula | null = null;
         let curso: Curso | null = null;
+        let materia: Materia | null = null;
 
         if (userId) {
             user = await this.userRepository.findOneBy({ id: userId });
@@ -95,12 +103,18 @@ export class DocenteAulaService {
             if (!curso) throw new BadRequestException(`Curso no encontrado con id ${cursoId}`);
         }
 
+        if (materiaId) {
+            materia = await this.materiaRepository.findOneBy({ id: materiaId });
+            if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
+        }
+
         const docenteAula = await this.docenteAulaRepository.preload({
             id,
             ...rest,
             ...(user ? { user } : {}),
             ...(aula ? { aula } : {}),
             ...(curso ? { curso } : {}),
+            ...(materia ? { materia } : {}),
         });
 
         if (!docenteAula) throw new NotFoundException(`Registro docente_aula con id ${id} no encontrado`);
