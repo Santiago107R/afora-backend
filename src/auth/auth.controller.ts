@@ -6,7 +6,7 @@ import { GetUser } from './decorators';
 import { User } from './entities/user.entity';
 import { type Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import type { UpdateAuthDto } from './dto/update-user-auth.dto';
 
 @Controller('auth')

@@ -78,42 +78,33 @@ export class AuthService {
   async findAll(paginationDto: PaginationDto) {
     const { limit = 10, offset = 0, query = undefined, roles = undefined } = paginationDto;
 
-    const where: any = {};
+    const queryBuilder = this.userRespository.createQueryBuilder('user')
+      .leftJoinAndSelect('user.docenteAula', 'docenteAula')
+      .take(limit)
+      .skip(offset);
 
     if (query !== undefined) {
-      where.name = ILike(`%${query}%`);
+      queryBuilder.andWhere('user.name ILike :query', { query: `%${query}%` });
     }
 
     if (roles && roles.length > 0) {
       const cleanRoles = roles.map(role => role.trim());
 
-      where.roles = Raw(
-        (alias) => `${alias} && :roles::text[]`,
-        { roles: cleanRoles }
-      );
+      queryBuilder.andWhere('user.roles && :cleanRoles::text[]', { cleanRoles });
     }
 
     try {
-      const [users, total] = await this.userRespository.findAndCount({
-        take: limit,
-        skip: offset,
-        relations: {
-          docenteAula: true,
-        },
-        where,
-      })
-
+      const [users, total] = await queryBuilder.getManyAndCount();
       const pages = limit > 0 ? Math.ceil(total / limit) : 0;
 
       return {
         total,
         pages,
         users,
-      }
+      };
     } catch (error) {
       handleDbError(error);
     }
-
   }
 
   async findOne(id: string) {
