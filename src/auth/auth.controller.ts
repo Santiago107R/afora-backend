@@ -15,7 +15,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
-  @ApiResponse({ status: 201, description: 'User was created', type: User })
+  @ApiResponse({ status: 201, description: 'User was created', type: () => User })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async createUser(@Body() createAuthDto: CreateAuthDto, @Res({ passthrough: true }) res: Response) {
     const { token, ...user } = await this.authService.create(createAuthDto)

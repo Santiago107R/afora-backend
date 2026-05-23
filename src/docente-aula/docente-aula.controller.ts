@@ -10,7 +10,7 @@ export class DocenteAulaController {
     constructor(private readonly docenteAulaService: DocenteAulaService) { }
 
     @Post()
-    @ApiResponse({ status: 201, description: 'DocenteAula was created', type: DocenteAula })
+    @ApiResponse({ status: 201, description: 'DocenteAula was created', type: () => DocenteAula })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })

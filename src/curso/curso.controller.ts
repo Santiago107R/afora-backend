@@ -11,7 +11,7 @@ export class CursoController {
   constructor(private readonly cursoService: CursoService) {}
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Curso was created', type: Curso })
+  @ApiResponse({ status: 201, description: 'Curso was created', type: () => Curso })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
