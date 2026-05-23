@@ -8,7 +8,7 @@ import { jwtPayload } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { handleDbError } from 'src/common/utils/handle-errors';
+import { handleDbError } from '../common/utils/handle-errors';
 import { UpdateAuthDto } from './dto/update-user-auth.dto';
 
 @Injectable()
@@ -85,9 +85,12 @@ export class AuthService {
     }
 
     if (roles && roles.length > 0) {
-      const postgresArray = `{${roles.join(',')}}`;
+      const cleanRoles = roles.map(role => role.trim());
 
-      where.roles = Raw((alias) => `${alias} && :roles`, { roles: postgresArray });
+      where.roles = Raw(
+        (alias) => `${alias} && :roles::text[]`,
+        { roles: cleanRoles }
+      );
     }
 
     try {

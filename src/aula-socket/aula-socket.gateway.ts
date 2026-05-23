@@ -7,6 +7,8 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { AulaSocketService } from './aula-socket.service';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class AulaSocketGateway {
@@ -15,9 +17,17 @@ export class AulaSocketGateway {
 
   constructor(private readonly aulaSocketService: AulaSocketService) { }
 
+
+  /**
+   * @payload paginationDto - Estructura de paginación
+   */
   @SubscribeMessage('findAllAulaSocket')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   async findAll(
-    @MessageBody() paginationDto: any,
+    @MessageBody() paginationDto: PaginationDto,
     @ConnectedSocket() client: Socket
   ) {
     const aulas = await this.aulaSocketService.findAll(paginationDto);
@@ -25,6 +35,11 @@ export class AulaSocketGateway {
   }
 
   @SubscribeMessage('findOneAulaSocket')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
   async findOne(
     @MessageBody() id: string,
     @ConnectedSocket() client: Socket,    

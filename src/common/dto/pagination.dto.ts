@@ -1,6 +1,6 @@
 import { Transform, Type } from "class-transformer"
 import { IsArray, IsIn, IsOptional, IsPositive, IsString, Min } from "class-validator"
-import { State } from "src/aula/interfaces/state-values"
+import { State } from "../../aula/interfaces/state-values"
 
 export class PaginationDto {
     @IsOptional()
@@ -23,18 +23,6 @@ export class PaginationDto {
     @IsOptional()
     @IsArray()
     @IsString({ each: true })
-    @Transform(({ value }) => {
-        if (!value) return undefined;
-
-        //! ?roles=admin&roles=docente)
-        if (Array.isArray(value)) return value;
-
-        //! ?roles=admin,docente
-        if (typeof value === 'string' && value.includes(',')) {
-            return value.split(',');
-        }
-
-        return [value];
-    })
+    @Transform(({ value }) => typeof value === 'string' ? value.split(',') : value)
     roles?: string[];
 }
