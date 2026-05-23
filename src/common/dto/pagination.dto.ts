@@ -21,6 +21,7 @@ export class PaginationDto {
     state?: State
 
     @IsOptional()
+    @IsArray()
     @IsString({ each: true })
     @Transform(({ value }) => typeof value === 'string' ? value.split(',') : value)
     roles?: string[];
