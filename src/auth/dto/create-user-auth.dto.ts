@@ -23,15 +23,6 @@ export class CreateAuthDto {
     password: string;
 
     @ApiProperty({
-        description: 'User DNI',
-        nullable: true,
-    })
-    @IsOptional()
-    @IsNumber()
-    @IsPositive()
-    DNI?: number;
-
-    @ApiProperty({
         description: 'User Roles',
     })
     @IsArray()

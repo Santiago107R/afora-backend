@@ -33,16 +33,6 @@ export class User {
     password: string;
 
     @ApiProperty({
-        example: '49675829',
-        description: 'User DNI',
-        nullable: true,
-    })
-    @Column('int', {
-        nullable: true,
-    })
-    DNI?: number;
-
-    @ApiProperty({
         example: 'admin, docente',
         description: 'User Roles',
     })

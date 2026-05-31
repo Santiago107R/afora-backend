@@ -5,9 +5,7 @@ import { AulaModule } from './aula/aula.module';
 import { CommonModule } from './common/common.module';
 import { CursoModule } from './curso/curso.module';
 import { DocenteAulaModule } from './docente-aula/docente-aula.module';
-import { FilesModule } from './files/files.module';
 import { MateriaModule } from './materia/materia.module';
-import { MapaModule } from './mapa/mapa.module';
 import { AuthModule } from './auth/auth.module';
 import { AulaSocketModule } from './aula-socket/aula-socket.module';
 import { SeedModule } from './seed/seed.module';
@@ -47,11 +45,7 @@ import { SeedModule } from './seed/seed.module';
 
     MateriaModule,
     
-    MapaModule,
-    
     DocenteAulaModule,
-    
-    FilesModule,
     
     AulaSocketModule,
     
