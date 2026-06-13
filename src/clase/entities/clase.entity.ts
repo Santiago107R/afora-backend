@@ -6,7 +6,7 @@ import { Materia } from '../../materia/entities/materia.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
-export class DocenteAula {
+export class Clase {
     @ApiProperty({
         example: 'e4809c2f-d26d-44ea-9f58-d15dba3cd3ac',
         description: 'DocenteAula ID',

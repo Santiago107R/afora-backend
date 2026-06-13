@@ -1,21 +1,21 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, ParseUUIDPipe } from '@nestjs/common';
-import { DocenteAulaService } from './docente-aula.service';
-import { CreateDocenteAulaDto } from './dto/create-docente-aula.dto';
-import { UpdateDocenteAulaDto } from './dto/update-docente-aula.dto';
+import { ClaseService } from './clase.service';
+import { CreateClaseDto } from './dto/create-clase.dto';
+import { UpdateClaseDto } from './dto/update-clase.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { DocenteAula } from './entities/docente-aula.entity';
+import { Clase } from './entities/clase.entity';
 @ApiTags('Docente Aula')
 @Controller('docente-aula')
-export class DocenteAulaController {
-    constructor(private readonly docenteAulaService: DocenteAulaService) { }
+export class ClaseController {
+    constructor(private readonly docenteAulaService: ClaseService) { }
 
     @Post()
-    @ApiResponse({ status: 201, description: 'DocenteAula was created', type: () => DocenteAula })
+    @ApiResponse({ status: 201, description: 'DocenteAula was created', type: () => Clase })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
-    create(@Body() createDocenteAulaDto: CreateDocenteAulaDto) {
-        return this.docenteAulaService.create(createDocenteAulaDto);
+    create(@Body() createClaseDto: CreateClaseDto) {
+        return this.docenteAulaService.create(createClaseDto);
     }
 
     @Get()
@@ -45,9 +45,9 @@ export class DocenteAulaController {
     @ApiResponse({ status: 404, description: 'Not Found' })
     update(
         @Param('id', ParseUUIDPipe) id: string,
-        @Body() updateDocenteAulaDto: UpdateDocenteAulaDto,
+        @Body() updateClaseDto: UpdateClaseDto,
     ) {
-        return this.docenteAulaService.update(id, updateDocenteAulaDto);
+        return this.docenteAulaService.update(id, updateClaseDto);
     }
 
     @Delete(':id')

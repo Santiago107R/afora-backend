@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDocenteAulaDto } from './dto/create-docente-aula.dto';
-import { UpdateDocenteAulaDto } from './dto/update-docente-aula.dto';
-import { DocenteAula } from './entities/docente-aula.entity';
+import { CreateClaseDto } from './dto/create-clase.dto';
+import { UpdateClaseDto } from './dto/update-clase.dto';
+import { Clase } from './entities/clase.entity';
 import { User } from '../auth/entities/user.entity';
 import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
@@ -11,12 +11,11 @@ import { handleDbError } from '../common/utils/handle-errors';
 import { Materia } from '../materia/entities/materia.entity';
 
 @Injectable()
-export class DocenteAulaService {
-    private readonly logger = new Logger(DocenteAulaService.name);
+export class ClaseService {
 
     constructor(
-        @InjectRepository(DocenteAula)
-        private readonly docenteAulaRepository: Repository<DocenteAula>,
+        @InjectRepository(Clase)
+        private readonly claseRepository: Repository<Clase>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
@@ -31,8 +30,8 @@ export class DocenteAulaService {
         private readonly materiaRepository: Repository<Materia>,
     ) { }
 
-    async create(createDocenteAulaDto: CreateDocenteAulaDto) {
-        const { userId, aulaId, cursoId, materiaId, ...rest } = createDocenteAulaDto;
+    async create(createClaseDto: CreateClaseDto) {
+        const { userId, aulaId, cursoId, materiaId, ...rest } = createClaseDto;
 
         const [user, aula, curso, materia] = await Promise.all([
             this.userRepository.findOneBy({ id: userId }),
@@ -49,7 +48,7 @@ export class DocenteAulaService {
         if (!curso) throw new BadRequestException(`Curso no encontrado con id ${cursoId}`);
         if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
 
-        const docenteAula = this.docenteAulaRepository.create({
+        const docenteAula = this.claseRepository.create({
             user,
             aula,
             curso,
@@ -58,7 +57,7 @@ export class DocenteAulaService {
         });
 
         try {
-            await this.docenteAulaRepository.save(docenteAula);
+            await this.claseRepository.save(docenteAula);
             return docenteAula;
         } catch (error) {
             handleDbError(error);
@@ -66,19 +65,19 @@ export class DocenteAulaService {
     }
 
     async findAll() {
-        return this.docenteAulaRepository.find();
+        return this.claseRepository.find();
     }
 
     async findOne(id: string) {
-        const docenteAula = await this.docenteAulaRepository.findOne({ where: { id } });
+        const docenteAula = await this.claseRepository.findOne({ where: { id } });
 
         if (!docenteAula) throw new NotFoundException(`Registro docente_aula con id ${id} no encontrado`);
 
         return docenteAula;
     }
 
-    async update(id: string, updateDocenteAulaDto: UpdateDocenteAulaDto) {
-        const { userId, aulaId, cursoId, materiaId, ...rest } = updateDocenteAulaDto;
+    async update(id: string, updateClaseDto: UpdateClaseDto) {
+        const { userId, aulaId, cursoId, materiaId, ...rest } = updateClaseDto;
 
         let user: User | null = null;
         let aula: Aula | null = null;
@@ -108,7 +107,7 @@ export class DocenteAulaService {
             if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
         }
 
-        const docenteAula = await this.docenteAulaRepository.preload({
+        const docenteAula = await this.claseRepository.preload({
             id,
             ...rest,
             ...(user ? { user } : {}),
@@ -120,7 +119,7 @@ export class DocenteAulaService {
         if (!docenteAula) throw new NotFoundException(`Registro docente_aula con id ${id} no encontrado`);
 
         try {
-            await this.docenteAulaRepository.save(docenteAula);
+            await this.claseRepository.save(docenteAula);
             return docenteAula;
         } catch (error) {
             handleDbError(error);
@@ -129,7 +128,7 @@ export class DocenteAulaService {
 
     async remove(id: string) {
         const docenteAula = await this.findOne(id);
-        await this.docenteAulaRepository.remove(docenteAula);
+        await this.claseRepository.remove(docenteAula);
         return { message: 'Registro eliminado correctamente' };
     }
 }

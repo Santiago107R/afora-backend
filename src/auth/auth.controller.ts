@@ -88,7 +88,7 @@ export class AuthController {
   }
 
   @Get('user')
-  @Auth(ValidRoles.admin, ValidRoles.secretario)
+  @Auth(ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

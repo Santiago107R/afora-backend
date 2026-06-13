@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { State } from "../interfaces/state-values";
-import { DocenteAula } from "../../docente-aula/entities/docente-aula.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Clase } from "../../clase/entities/clase.entity";
 
 @Entity()
 export class Aula {
@@ -52,8 +52,8 @@ export class Aula {
     state: State;
 
     @OneToMany(
-        () => DocenteAula,
-        (docenteAula) => docenteAula.aula,
+        () => Clase,
+        (clase) => clase.aula,
     )
-    docenteAula: DocenteAula[];
+    clase: Clase[];
 }

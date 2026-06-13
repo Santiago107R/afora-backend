@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { State } from '../../aula/interfaces/state-values';
 
-export type EscolarRoles = 'admin' | 'docente' | 'secretario' | 'supervisor';
+export type EscolarRoles = 'admin' | 'user' | 'supervisor';
 export type TurnoCurso = 'mañana' | 'tarde' | 'vespertino';
 export type EstadoAula = State;
 
@@ -48,19 +48,19 @@ export const initialData: SeedData = {
         {
             name: 'Santiago Robles',
             password: bcrypt.hashSync('SanUel82025', 10),
-            roles: ['admin', 'secretario', 'docente'],
+            roles: ['admin', 'user'],
             isActive: true,
         },
         {
             name: 'Bianca Docente',
             password: bcrypt.hashSync('Docente123!', 10),
-            roles: ['docente'],
+            roles: ['user'],
             isActive: true,
         },
         {
             name: 'Secretaria General',
             password: bcrypt.hashSync('Secretaria123!', 10),
-            roles: ['secretario'],
+            roles: ['admin'],
             isActive: true,
         }
     ],
