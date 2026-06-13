@@ -26,8 +26,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('OrganiMap RESTFul API')
-    .setDescription('OrganiMap endpoints')
+    .setTitle('Afora RESTFul API')
+    .setDescription('Afora endpoints')
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
