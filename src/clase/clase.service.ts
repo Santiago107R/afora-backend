@@ -48,7 +48,7 @@ export class ClaseService {
         if (!curso) throw new BadRequestException(`Curso no encontrado con id ${cursoId}`);
         if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
 
-        const docenteAula = this.claseRepository.create({
+        const clase = this.claseRepository.create({
             user,
             aula,
             curso,
@@ -57,8 +57,8 @@ export class ClaseService {
         });
 
         try {
-            await this.claseRepository.save(docenteAula);
-            return docenteAula;
+            await this.claseRepository.save(clase);
+            return clase;
         } catch (error) {
             handleDbError(error);
         }
@@ -69,11 +69,11 @@ export class ClaseService {
     }
 
     async findOne(id: string) {
-        const docenteAula = await this.claseRepository.findOne({ where: { id } });
+        const clase = await this.claseRepository.findOne({ where: { id } });
 
-        if (!docenteAula) throw new NotFoundException(`Registro docente_aula con id ${id} no encontrado`);
+        if (!clase) throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
 
-        return docenteAula;
+        return clase;
     }
 
     async update(id: string, updateClaseDto: UpdateClaseDto) {
@@ -107,7 +107,7 @@ export class ClaseService {
             if (!materia) throw new BadRequestException(`Materia no encontrado con id ${materiaId}`);
         }
 
-        const docenteAula = await this.claseRepository.preload({
+        const clase = await this.claseRepository.preload({
             id,
             ...rest,
             ...(user ? { user } : {}),
@@ -116,19 +116,19 @@ export class ClaseService {
             ...(materia ? { materia } : {}),
         });
 
-        if (!docenteAula) throw new NotFoundException(`Registro docente_aula con id ${id} no encontrado`);
+        if (!clase) throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
 
         try {
-            await this.claseRepository.save(docenteAula);
-            return docenteAula;
+            await this.claseRepository.save(clase);
+            return clase;
         } catch (error) {
             handleDbError(error);
         }
     }
 
     async remove(id: string) {
-        const docenteAula = await this.findOne(id);
-        await this.claseRepository.remove(docenteAula);
+        const clase = await this.findOne(id);
+        await this.claseRepository.remove(clase);
         return { message: 'Registro eliminado correctamente' };
     }
 }

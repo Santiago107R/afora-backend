@@ -4,18 +4,18 @@ import { CreateClaseDto } from './dto/create-clase.dto';
 import { UpdateClaseDto } from './dto/update-clase.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Clase } from './entities/clase.entity';
-@ApiTags('Docente Aula')
-@Controller('docente-aula')
+@ApiTags('Clase')
+@Controller('clase')
 export class ClaseController {
-    constructor(private readonly docenteAulaService: ClaseService) { }
+    constructor(private readonly claseService: ClaseService) { }
 
     @Post()
-    @ApiResponse({ status: 201, description: 'DocenteAula was created', type: () => Clase })
+    @ApiResponse({ status: 201, description: 'Clase was created', type: () => Clase })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
     create(@Body() createClaseDto: CreateClaseDto) {
-        return this.docenteAulaService.create(createClaseDto);
+        return this.claseService.create(createClaseDto);
     }
 
     @Get()
@@ -24,7 +24,7 @@ export class ClaseController {
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
     findAll() {
-        return this.docenteAulaService.findAll();
+        return this.claseService.findAll();
     }
 
     @Get(':id')
@@ -34,7 +34,7 @@ export class ClaseController {
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
     @ApiResponse({ status: 404, description: 'Not Found' })
     findOne(@Param('id', ParseUUIDPipe) id: string) {
-        return this.docenteAulaService.findOne(id);
+        return this.claseService.findOne(id);
     }
 
     @Patch(':id')
@@ -47,7 +47,7 @@ export class ClaseController {
         @Param('id', ParseUUIDPipe) id: string,
         @Body() updateClaseDto: UpdateClaseDto,
     ) {
-        return this.docenteAulaService.update(id, updateClaseDto);
+        return this.claseService.update(id, updateClaseDto);
     }
 
     @Delete(':id')
@@ -57,6 +57,6 @@ export class ClaseController {
     @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
     @ApiResponse({ status: 404, description: 'Not Found' })
     remove(@Param('id', ParseUUIDPipe) id: string) {
-        return this.docenteAulaService.remove(id);
+        return this.claseService.remove(id);
     }
 }
