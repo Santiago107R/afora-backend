@@ -40,7 +40,6 @@ export class AuthController {
   }
 
   @Post('login')
-  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'Authenticated successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
