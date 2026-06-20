@@ -18,8 +18,12 @@ export class AuthController {
   @Post('register')
   @ApiResponse({ status: 201, description: 'User was created', type: () => User })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  async createUser(@Body() createAuthDto: CreateAuthDto, @Res({ passthrough: true }) res: Response) {
-    const { token, ...user } = await this.authService.create(createAuthDto)
+  async createUser(
+    @GetUser('roles') rol: ValidRoles,
+    @Body() createAuthDto: CreateAuthDto,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const { token, ...user } = await this.authService.create(createAuthDto, rol)
 
     res.cookie('access_token', token, {
       httpOnly: true,
@@ -35,11 +39,15 @@ export class AuthController {
   }
 
   @Post('login')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'Authenticated successfully' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async loginUser(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
+  async loginUser(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response
+  ) {
     const { token, ...user } = await this.authService.login(loginUserDto)
 
     res.cookie('access_token', token, {

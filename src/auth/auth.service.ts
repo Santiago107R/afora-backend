@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { ILike, Raw, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
-import { jwtPayload } from './interfaces';
+import { jwtPayload, ValidRoles } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
@@ -20,9 +20,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async create(createAuthDto: CreateAuthDto) {
+  async create(createAuthDto: CreateAuthDto, userRol: ValidRoles) {
     try {
-      const { password, ...userData } = createAuthDto
+      const { password, roles, ...userData } = createAuthDto
+
+      if (userRol == ValidRoles.admin && !roles.includes(ValidRoles.user)) {
+        throw new UnauthorizedException("You can only create users with the 'user' role.")
+      }
 
       const user = this.userRespository.create({
         ...userData,
