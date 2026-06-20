@@ -5,12 +5,15 @@ import { UpdateCursoDto } from './dto/update-curso.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { Curso } from './entities/curso.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 @ApiTags('Cursos')
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly cursoService: CursoService) {}
+  constructor(private readonly cursoService: CursoService) { }
 
   @Post()
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 201, description: 'Curso was created', type: () => Curso })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -20,6 +23,7 @@ export class CursoController {
   }
 
   @Get()
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -29,6 +33,7 @@ export class CursoController {
   }
 
   @Get(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -39,6 +44,7 @@ export class CursoController {
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -49,6 +55,7 @@ export class CursoController {
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

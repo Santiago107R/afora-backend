@@ -7,10 +7,12 @@ import { Curso } from '../curso/entities/curso.entity';
 import { ClaseController } from './clase.controller';
 import { ClaseService } from './clase.service';
 import { Materia } from '../materia/entities/materia.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Clase, User, Aula, Curso, Materia]),
+        AuthModule
     ],
     controllers: [ClaseController],
     providers: [ClaseService],

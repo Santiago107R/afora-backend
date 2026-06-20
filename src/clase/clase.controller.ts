@@ -4,12 +4,15 @@ import { CreateClaseDto } from './dto/create-clase.dto';
 import { UpdateClaseDto } from './dto/update-clase.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Clase } from './entities/clase.entity';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 @ApiTags('Clase')
 @Controller('clase')
 export class ClaseController {
     constructor(private readonly claseService: ClaseService) { }
 
     @Post()
+    @Auth(ValidRoles.super_user, ValidRoles.admin)
     @ApiResponse({ status: 201, description: 'Clase was created', type: () => Clase })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -19,6 +22,7 @@ export class ClaseController {
     }
 
     @Get()
+    @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
     @ApiResponse({ status: 200, description: 'OK' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -28,6 +32,7 @@ export class ClaseController {
     }
 
     @Get(':id')
+    @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
     @ApiResponse({ status: 200, description: 'OK' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -38,6 +43,7 @@ export class ClaseController {
     }
 
     @Patch(':id')
+    @Auth(ValidRoles.super_user, ValidRoles.admin)
     @ApiResponse({ status: 200, description: 'OK' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -51,6 +57,7 @@ export class ClaseController {
     }
 
     @Delete(':id')
+    @Auth(ValidRoles.super_user, ValidRoles.admin)
     @ApiResponse({ status: 200, description: 'OK' })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })

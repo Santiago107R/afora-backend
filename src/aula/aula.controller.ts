@@ -6,6 +6,8 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { AulaSocketGateway } from '../aula-socket/aula-socket.gateway';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Aula } from './entities/aula.entity';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 @ApiTags('Aulas')
 @Controller('aula')
@@ -14,9 +16,10 @@ export class AulaController {
     private readonly aulaService: AulaService,
     @Inject(forwardRef(() => AulaSocketGateway))
     private readonly aulaSocketGateway: AulaSocketGateway,
-  ) {}
+  ) { }
 
   @Post()
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 201, description: 'Aula was created', type: () => Aula })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -28,6 +31,7 @@ export class AulaController {
   }
 
   @Get()
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -37,6 +41,7 @@ export class AulaController {
   }
 
   @Get(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -47,6 +52,7 @@ export class AulaController {
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.supervisor)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -59,6 +65,7 @@ export class AulaController {
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

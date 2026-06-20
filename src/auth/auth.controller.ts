@@ -16,9 +16,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 201, description: 'User was created', type: () => User })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @UseGuards(AuthGuard())
   async createUser(
     @GetUser('roles') rol: ValidRoles,
     @Body() createAuthDto: CreateAuthDto,
@@ -97,7 +97,7 @@ export class AuthController {
   }
 
   @Get('user')
-  @Auth(ValidRoles.admin, ValidRoles.user)
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -107,6 +107,7 @@ export class AuthController {
   }
 
   @Get('user/:id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -117,6 +118,7 @@ export class AuthController {
   }
 
   @Patch('user/:id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -127,6 +129,7 @@ export class AuthController {
   }
 
   @Delete('user/:id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
