@@ -24,7 +24,7 @@ export class AuthService {
     try {
       const { password, roles, ...userData } = createAuthDto
 
-      if (userRol == ValidRoles.admin && !roles.includes(ValidRoles.user)) {
+      if (userRol?.includes(ValidRoles.admin) && !roles.includes(ValidRoles.user)) {
         throw new UnauthorizedException("You can only create users with the 'user' role.")
       }
 
