@@ -20,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async create(createAuthDto: CreateAuthDto, userRol: ValidRoles) {
+  async create(createAuthDto: CreateAuthDto, userRol: ValidRoles | undefined = undefined) {
     try {
       const { password, roles, ...userData } = createAuthDto
 
