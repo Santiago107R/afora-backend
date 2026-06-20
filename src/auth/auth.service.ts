@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { ILike, Raw, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { jwtPayload, ValidRoles } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { handleDbError } from '../common/utils/handle-errors';
+import { handleError } from '../common/utils/handle-errors';
 import { UpdateAuthDto } from './dto/update-user-auth.dto';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class AuthService {
       const { password, roles, ...userData } = createAuthDto
 
       if (userRol?.includes(ValidRoles.admin) && !roles.includes(ValidRoles.user)) {
-        throw new UnauthorizedException("You can only create users with the 'user' role.")
+        throw new ForbiddenException("You can only create users with the 'user' role.")
       }
 
       const user = this.userRespository.create({
@@ -41,7 +41,7 @@ export class AuthService {
         token: this.getJwtToken({ id: user.id })
       }
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 
@@ -108,7 +108,7 @@ export class AuthService {
         users,
       };
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
   }
 
@@ -138,7 +138,7 @@ export class AuthService {
 
       return this.findOne(id);
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
   }
 
@@ -160,7 +160,7 @@ export class AuthService {
         .where({})
         .execute();
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 }

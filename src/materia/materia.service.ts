@@ -5,7 +5,7 @@ import { ILike, Repository } from 'typeorm';
 import { Materia } from './entities/materia.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { handleDbError } from '../common/utils/handle-errors';
+import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class MateriaService {
@@ -23,7 +23,7 @@ export class MateriaService {
 
       return this.findOne(materia.id);
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
 
   }
@@ -77,7 +77,7 @@ export class MateriaService {
 
       return this.findOne(id);
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
   }
 
@@ -99,7 +99,7 @@ export class MateriaService {
         .where({})
         .execute();
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 

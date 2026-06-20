@@ -7,7 +7,7 @@ import { Clase } from './entities/clase.entity';
 import { User } from '../auth/entities/user.entity';
 import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
-import { handleDbError } from '../common/utils/handle-errors';
+import { handleError } from '../common/utils/handle-errors';
 import { Materia } from '../materia/entities/materia.entity';
 
 @Injectable()
@@ -60,7 +60,7 @@ export class ClaseService {
             await this.claseRepository.save(clase);
             return clase;
         } catch (error) {
-            handleDbError(error);
+            handleError(error);
         }
     }
 
@@ -122,7 +122,7 @@ export class ClaseService {
             await this.claseRepository.save(clase);
             return clase;
         } catch (error) {
-            handleDbError(error);
+            handleError(error);
         }
     }
 

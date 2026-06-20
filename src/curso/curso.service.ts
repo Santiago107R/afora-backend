@@ -5,7 +5,7 @@ import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Curso } from './entities/curso.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { handleDbError } from '../common/utils/handle-errors';
+import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class CursoService {
@@ -23,7 +23,7 @@ export class CursoService {
 
       return this.findOne(curso.id);
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
 
   }
@@ -77,7 +77,7 @@ export class CursoService {
 
       return this.findOne(id);
     } catch (error) {
-      handleDbError(error);
+      handleError(error);
     }
   }
 
@@ -99,7 +99,7 @@ export class CursoService {
         .where({})
         .execute();
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 

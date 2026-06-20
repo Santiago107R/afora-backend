@@ -6,7 +6,7 @@ import { Aula } from './entities/aula.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { State } from './interfaces/state-values';
 import { PaginationDto } from '../common/dto/pagination.dto';
-import { handleDbError } from '../common/utils/handle-errors';
+import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class AulaService {
@@ -26,7 +26,7 @@ export class AulaService {
 
       return this.findOne(aula.id);
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 
@@ -61,7 +61,7 @@ export class AulaService {
         aulas
       }
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 
@@ -88,7 +88,7 @@ export class AulaService {
 
       return this.findOne(id);
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
 
   }
@@ -111,7 +111,7 @@ export class AulaService {
         .where({})
         .execute();
     } catch (error) {
-      handleDbError(error)
+      handleError(error)
     }
   }
 }
