@@ -18,6 +18,7 @@ export class AuthController {
   @Post('register')
   @ApiResponse({ status: 201, description: 'User was created', type: () => User })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @UseGuards(AuthGuard())
   async createUser(
     @GetUser('roles') rol: ValidRoles,
     @Body() createAuthDto: CreateAuthDto,
