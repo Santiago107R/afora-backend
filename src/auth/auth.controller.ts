@@ -28,8 +28,9 @@ export class AuthController {
 
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: process.env.STAGE === 'prod',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
+      path: '/',
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
 
@@ -52,8 +53,9 @@ export class AuthController {
 
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: process.env.STAGE === 'prod',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
+      path: '/',
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
 
@@ -75,8 +77,9 @@ export class AuthController {
 
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: process.env.STAGE === 'prod',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
+      path: '/',
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
 
