@@ -7,16 +7,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api');
-
-  app.enableCors();
-
   app.use(cookieParser());
 
   app.enableCors({
     origin: 'https://afora-frontend.vercel.app',
     credentials: true,
   });
+
+  app.setGlobalPrefix('api');
+
+
 
   app.useGlobalPipes(
     new ValidationPipe({
