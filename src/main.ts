@@ -14,7 +14,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: 'https://afora-frontend.vercel.app/',
+    origin: 'https://afora-frontend.vercel.app',
     credentials: true,
   });
 
