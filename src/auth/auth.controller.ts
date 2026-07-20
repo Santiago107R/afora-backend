@@ -94,7 +94,14 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token');
+
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+    });
+
     return { message: 'Sesión cerrada correctamente' };
   }
 
