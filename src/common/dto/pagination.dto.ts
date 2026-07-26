@@ -34,7 +34,7 @@ export class PaginationDto {
         nullable: true,
     })
     @IsOptional()
-    @IsIn(['available', 'maintenance', 'busy'])
+    @IsIn(['available', 'busy', 'maintenance'])
     state?: State
 
     @ApiProperty({

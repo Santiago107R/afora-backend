@@ -1,7 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { State } from "../interfaces/state-values";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { Clase } from "../../clase/entities/clase.entity";
+import { Estado } from "src/estado/entities/estado.entity";
 
 @Entity()
 export class Aula {
@@ -41,15 +41,20 @@ export class Aula {
     capacity: number;
 
     @ApiProperty({
-        example: 'available',
-        description: 'Aula state',
-        default: State.AVAILABLE,
+        example: 1,
+        description: 'Estado ID del Aula',
+        default: 1,
     })
-    @Column('enum', {
-        enum: State,
-        default: State.AVAILABLE
-    })
-    state: State;
+    @Column({ type: 'int', default: 1 })
+    id_estado: number;
+
+    @ManyToOne(
+        () => Estado,
+        (estado) => estado.aula,
+        { eager: true, nullable: false },
+    )
+    @JoinColumn({ name: 'id_estado' })
+    estado: Estado;
 
     @OneToMany(
         () => Clase,

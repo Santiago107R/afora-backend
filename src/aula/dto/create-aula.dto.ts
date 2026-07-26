@@ -32,10 +32,11 @@ export class CreateAulaDto {
     capacity: number;
 
     @ApiProperty({
-        description: 'Aula State',
-        default: State.AVAILABLE,
+        example: 1,
+        description: 'ID del estado del aula',
+        default: 1,
     })
     @IsOptional()
-    @IsIn(['available', 'unavailable', 'busy'])
-    state: State;
+    @IsPositive()
+    id_estado?: number;
 }

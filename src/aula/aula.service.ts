@@ -17,9 +17,7 @@ export class AulaService {
   ) { }
 
   async create(createAulaDto: CreateAulaDto) {
-    const { state = State.AVAILABLE, ...rest } = createAulaDto
-
-    const aula = this.AulaRepository.create({ ...rest, state: state })
+    const aula = this.AulaRepository.create(createAulaDto)
 
     try {
       await this.AulaRepository.save(aula)
@@ -36,7 +34,9 @@ export class AulaService {
     const where: any = {};
 
     if (state !== undefined) {
-      where.state = state;
+      where.estado = {
+        name: state
+      };
     }
 
     if (query !== undefined) {
@@ -49,6 +49,7 @@ export class AulaService {
         skip: offset,
         relations: {
           clase: true,
+          estado: true
         },
         where,
       })
@@ -70,6 +71,7 @@ export class AulaService {
       where: { id },
       relations: {
         clase: true,
+        estado: true,
       },
     });
 

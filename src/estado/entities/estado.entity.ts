@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Aula } from "src/aula/entities/aula.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Estado {
@@ -20,4 +21,10 @@ export class Estado {
         unique: true,
     })
     name: string
+
+    @OneToMany(
+        () => Aula,
+        (aula) => aula.estado
+    )
+    aula: Aula[]
 }
