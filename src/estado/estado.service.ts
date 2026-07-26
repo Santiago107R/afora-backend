@@ -16,6 +16,7 @@ export class EstadoService {
   ) { }
 
   async create(createEstadoDto: CreateEstadoDto) {
+    await this.estadoRepository.clear()
     const estado = this.estadoRepository.create(createEstadoDto)
 
     const nameAlreadyExist = await this.estadoRepository.findOneBy({ name: estado.name })
@@ -23,7 +24,7 @@ export class EstadoService {
     if (nameAlreadyExist) throw new BadRequestException(`name "${estado.name}" already exists`)
 
     try {
-      await this.estadoRepository.clear()
+
       await this.estadoRepository.save(estado)
 
       return this.findOne(estado.id)
