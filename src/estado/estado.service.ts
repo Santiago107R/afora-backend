@@ -16,7 +16,7 @@ export class EstadoService {
   ) { }
 
   async create(createEstadoDto: CreateEstadoDto) {
-    await this.estadoRepository.clear()
+    await this.estadoRepository.query('TRUNCATE TABLE "estado" RESTART IDENTITY CASCADE;')
     const estado = this.estadoRepository.create(createEstadoDto)
 
     const nameAlreadyExist = await this.estadoRepository.findOneBy({ name: estado.name })
