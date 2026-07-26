@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEstadoDto } from './dto/create-estado.dto';
 import { UpdateEstadoDto } from './dto/update-estado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,12 @@ export class EstadoService {
   async create(createEstadoDto: CreateEstadoDto) {
     const estado = this.estadoRepository.create(createEstadoDto)
 
+    const nameAlreadyExist = await this.estadoRepository.findOneBy({ name: estado.name })
+
+    if (nameAlreadyExist) throw new BadRequestException(`name ${estado.name} already exists`)
+
     try {
+
       await this.estadoRepository.save(estado)
 
       return this.findOne(estado.id)
