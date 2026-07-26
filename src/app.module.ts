@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { AulaSocketModule } from './aula-socket/aula-socket.module';
 import { SeedModule } from './seed/seed.module';
 import { ClaseModule } from './clase/clase.module';
+import { EstadoModule } from './estado/estado.module';
 
 @Module({
   imports: [
@@ -50,6 +51,8 @@ import { ClaseModule } from './clase/clase.module';
     AulaSocketModule,
     
     SeedModule,
+    
+    EstadoModule,
 
   ],
   controllers: [],

@@ -86,7 +86,7 @@ export class CursoService {
 
     await this.cursoRepository.remove(curso);
 
-    return `DELETE WAS EXECUTED SUCCESSFULLY`;
+    return `DELETED SUCCESSFULLY`;
   }
 
   async deleteAllRegisters() {

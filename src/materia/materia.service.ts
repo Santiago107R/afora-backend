@@ -86,7 +86,7 @@ export class MateriaService {
 
     await this.materiaRepository.remove(materia);
 
-    return `DELETE WAS EXECUTED SUCCESSFULLY`;
+    return `DELETED SUCCESSFULLY`;
   }
 
   async deleteAllRegisters() {
