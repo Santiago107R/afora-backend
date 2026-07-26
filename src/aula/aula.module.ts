@@ -5,14 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Aula } from './entities/aula.entity';
 import { AulaSocketModule } from '../aula-socket/aula-socket.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { Estado } from 'src/estado/entities/estado.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Aula]), forwardRef(() => AulaSocketModule),
+    TypeOrmModule.forFeature([Aula, Estado]), forwardRef(() => AulaSocketModule),
     AuthModule
   ],
   controllers: [AulaController],
   providers: [AulaService],
   exports: [AulaService],
 })
-export class AulaModule {}
+export class AulaModule { }

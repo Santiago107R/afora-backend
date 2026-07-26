@@ -79,8 +79,8 @@ export const initialData: SeedData = {
             state: State.AVAILABLE,
         },
         {
-            name: 'Taller de Electrónica',
-            description: 'Mesas de trabajo con osciloscopios y soldadores',
+            name: 'Laboratorio de alimentos',
+            description: 'Mesas de trabajo con microscopios y tubos',
             capacity: 25,
             state: State.MAINTENANCE,
         },

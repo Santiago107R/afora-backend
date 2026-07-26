@@ -69,10 +69,26 @@ export class Clase {
     @Column('text')
     day: string;
 
+    // @ApiProperty({
+    //     example: '17:45-19:45',
+    //     description: 'clase Schedule',
+    // })
+    // @Column('text')
+    // schedule: string;
+
     @ApiProperty({
-        example: '17:45-19:45',
-        description: 'clase Schedule',
+        example: '17:45',
+        description: 'clase start time',
+        format: 'time',
     })
-    @Column('text')
-    schedule: string;
+    @Column('time')
+    startTime: string;
+
+    @ApiProperty({
+        example: '19:45',
+        description: 'clase end time',
+        format: 'time',
+    })
+    @Column('time')
+    endTime: string;
 }

@@ -19,7 +19,7 @@ export class CreateClaseDto {
     })
     @IsUUID()
     cursoId: string;
-    
+
     @ApiProperty({
         description: 'Materia ID'
     })
@@ -27,7 +27,7 @@ export class CreateClaseDto {
     materiaId: string;
 
     @ApiProperty({
-        description: 'DocenteAula Day',
+        description: 'clase Day',
         nullable: false,
     })
     @IsString()
@@ -35,9 +35,26 @@ export class CreateClaseDto {
     day: string;
 
     @ApiProperty({
-        description: 'DocenteAula Schedule',
+        example: '17:45',
+        description: 'clase start time',
         nullable: false,
     })
-    @Matches(/^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/)
-    schedule: string;
+    @IsNotEmpty()
+    @IsString()
+    @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+        message: 'startTime must be a valid time in HH:mm format',
+    })
+    startTime: string;
+
+    @ApiProperty({
+        example: '19:45',
+        description: 'clase end time',
+        nullable: false,
+    })
+    @IsNotEmpty()
+    @IsString()
+    @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+        message: 'endTime must be a valid time in HH:mm format',
+    })
+    endTime: string;
 }

@@ -4,20 +4,32 @@ import { UpdateAulaDto } from './dto/update-aula.dto';
 import { ILike, Repository } from 'typeorm';
 import { Aula } from './entities/aula.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { State } from './interfaces/state-values';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { handleError } from '../common/utils/handle-errors';
+import { Estado } from 'src/estado/entities/estado.entity';
 
 @Injectable()
 export class AulaService {
 
   constructor(
     @InjectRepository(Aula)
-    private readonly AulaRepository: Repository<Aula>
+    private readonly AulaRepository: Repository<Aula>,
+
+    @InjectRepository(Estado)
+    private readonly estadoRepository: Repository<Estado>,
   ) { }
 
   async create(createAulaDto: CreateAulaDto) {
-    const aula = this.AulaRepository.create(createAulaDto)
+    const { id_estado, ...rest } = createAulaDto
+
+    const estado = await this.estadoRepository.findOneBy({ id: id_estado })
+
+    if (!estado) throw new NotFoundException(`Estado with id ${id_estado} not found`)
+
+    const aula = this.AulaRepository.create({
+      id_estado,
+      ...rest
+    })
 
     try {
       await this.AulaRepository.save(aula)
