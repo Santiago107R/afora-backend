@@ -20,10 +20,10 @@ export class EstadoService {
 
     const nameAlreadyExist = await this.estadoRepository.findOneBy({ name: estado.name })
 
-    if (nameAlreadyExist) throw new BadRequestException(`name ${estado.name} already exists`)
+    if (nameAlreadyExist) throw new BadRequestException(`name "${estado.name}" already exists`)
 
     try {
-
+      await this.estadoRepository.clear()
       await this.estadoRepository.save(estado)
 
       return this.findOne(estado.id)
