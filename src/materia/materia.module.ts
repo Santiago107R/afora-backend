@@ -8,12 +8,7 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   controllers: [MateriaController],
   providers: [MateriaService],
-  imports: [
-    TypeOrmModule.forFeature([Materia,]),
-    AuthModule,
-  ],
-  exports: [
-    MateriaService,
-  ]
+  imports: [TypeOrmModule.forFeature([Materia]), AuthModule],
+  exports: [MateriaService],
 })
-export class MateriaModule { }
+export class MateriaModule {}

@@ -1,50 +1,50 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from "../entities/user.entity";
-import type { Repository } from "typeorm";
+import { User } from '../entities/user.entity';
+import type { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import type { jwtPayload } from "../interfaces";
+import type { jwtPayload } from '../interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    configService: ConfigService,
+  ) {
+    const jwtSecret = configService.get<string>('JWT_SECRET');
 
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        configService: ConfigService,
-    ) {
-        const jwtSecret = configService.get<string>('JWT_SECRET');
-
-        if (!jwtSecret) {
-            throw new Error('JWT_SECRET no está definido en las variables de entorno');
-        }
-
-        super({
-            jwtFromRequest: ExtractJwt.fromExtractors([
-                (req: Request) => {
-                    return req?.cookies?.['access_token'] || null;
-                },
-                ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ]),
-            ignoreExpiration: false,
-            secretOrKey: jwtSecret, 
-        });
+    if (!jwtSecret) {
+      throw new Error(
+        'JWT_SECRET no está definido en las variables de entorno',
+      );
     }
 
-    async validate(payload: jwtPayload): Promise<User> {
-        const { id } = payload;
+    super({
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: Request) => {
+          return req?.cookies?.['access_token'] || null;
+        },
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
+      ignoreExpiration: false,
+      secretOrKey: jwtSecret,
+    });
+  }
 
-        const user = await this.userRepository.findOneBy({ id });
+  async validate(payload: jwtPayload): Promise<User> {
+    const { id } = payload;
 
-        if (!user)
-            throw new UnauthorizedException('Token not valid');
+    const user = await this.userRepository.findOneBy({ id });
 
-        if (!user.isActive)
-            throw new UnauthorizedException('User is inactive, talk with an admin');
+    if (!user) throw new UnauthorizedException('Token not valid');
 
-        return user;
-    }
+    if (!user.isActive)
+      throw new UnauthorizedException('User is inactive, talk with an admin');
+
+    return user;
+  }
 }

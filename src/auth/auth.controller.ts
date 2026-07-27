@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Res, UseGuards, Query, Param, ParseUUIDPipe, Patch, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  UseGuards,
+  Query,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Delete,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-user-auth.dto';
 import { LoginUserDto } from './dto/login-auth.dto';
@@ -13,18 +27,25 @@ import { ValidRoles } from './interfaces';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @Auth(ValidRoles.super_user, ValidRoles.admin)
-  @ApiResponse({ status: 201, description: 'User was created', type: () => User })
+  @ApiResponse({
+    status: 201,
+    description: 'User was created',
+    type: () => User,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   async createUser(
     @GetUser('roles') rol: ValidRoles,
     @Body() createAuthDto: CreateAuthDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ) {
-    const { token, ...user } = await this.authService.create(createAuthDto, rol)
+    const { token, ...user } = await this.authService.create(
+      createAuthDto,
+      rol,
+    );
 
     res.cookie('access_token', token, {
       httpOnly: true,
@@ -47,9 +68,9 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ) {
-    const { token, ...user } = await this.authService.login(loginUserDto)
+    const { token, ...user } = await this.authService.login(loginUserDto);
 
     res.cookie('access_token', token, {
       httpOnly: true,
@@ -71,9 +92,10 @@ export class AuthController {
   @UseGuards(AuthGuard())
   async checkAuthStatus(
     @GetUser() user: User,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ) {
-    const { token, ...userToReturn } = await this.authService.checkAuthStatus(user);
+    const { token, ...userToReturn } =
+      await this.authService.checkAuthStatus(user);
 
     res.cookie('access_token', token, {
       httpOnly: true,
@@ -94,7 +116,6 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   logout(@Res({ passthrough: true }) res: Response) {
-
     res.clearCookie('access_token', {
       httpOnly: true,
       secure: true,
@@ -147,5 +168,4 @@ export class AuthController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.authService.remove(id);
   }
-
 }

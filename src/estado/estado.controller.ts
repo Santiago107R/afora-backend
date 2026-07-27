@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { EstadoService } from './estado.service';
 import { CreateEstadoDto } from './dto/create-estado.dto';
 import { UpdateEstadoDto } from './dto/update-estado.dto';
@@ -11,11 +20,15 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 @ApiTags('Estados')
 @Controller('estado')
 export class EstadoController {
-  constructor(private readonly estadoService: EstadoService) { }
+  constructor(private readonly estadoService: EstadoService) {}
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
-  @ApiResponse({ status: 201, description: 'Estado was created', type: () => Estado })
+  @ApiResponse({
+    status: 201,
+    description: 'Estado was created',
+    type: () => Estado,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
@@ -56,12 +69,12 @@ export class EstadoController {
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  @Auth(ValidRoles.super_user, ValidRoles.admin)
   remove(@Param('id') id: string) {
     return this.estadoService.remove(+id);
   }

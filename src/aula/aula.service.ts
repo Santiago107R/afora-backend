@@ -10,44 +10,49 @@ import { Estado } from 'src/estado/entities/estado.entity';
 
 @Injectable()
 export class AulaService {
-
   constructor(
     @InjectRepository(Aula)
     private readonly AulaRepository: Repository<Aula>,
 
     @InjectRepository(Estado)
     private readonly estadoRepository: Repository<Estado>,
-  ) { }
+  ) {}
 
   async create(createAulaDto: CreateAulaDto) {
-    const { id_estado, ...rest } = createAulaDto
+    const { id_estado, ...rest } = createAulaDto;
 
-    const estado = await this.estadoRepository.findOneBy({ id: id_estado })
+    const estado = await this.estadoRepository.findOneBy({ id: id_estado });
 
-    if (!estado) throw new NotFoundException(`Estado with id ${id_estado} not found`)
+    if (!estado)
+      throw new NotFoundException(`Estado with id ${id_estado} not found`);
 
     const aula = this.AulaRepository.create({
       estado,
-      ...rest
-    })
+      ...rest,
+    });
 
     try {
-      await this.AulaRepository.save(aula)
+      await this.AulaRepository.save(aula);
 
       return this.findOne(aula.id);
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0, state = undefined, query = undefined } = paginationDto
+    const {
+      limit = 10,
+      offset = 0,
+      state = undefined,
+      query = undefined,
+    } = paginationDto;
 
     const where: any = {};
 
     if (state !== undefined) {
       where.estado = {
-        name: state
+        name: state,
       };
     }
 
@@ -61,20 +66,20 @@ export class AulaService {
         skip: offset,
         relations: {
           clase: true,
-          estado: true
+          estado: true,
         },
         where,
-      })
+      });
 
       const pages = limit > 0 ? Math.ceil(total / limit) : 0;
 
       return {
         total,
         pages,
-        aulas
-      }
+        aulas,
+      };
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
 
@@ -87,30 +92,29 @@ export class AulaService {
       },
     });
 
-    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`)
+    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`);
 
-    return aula
+    return aula;
   }
 
   async update(id: string, updateAulaDto: UpdateAulaDto) {
-    const aula = await this.AulaRepository.preload({ id, ...updateAulaDto })
+    const aula = await this.AulaRepository.preload({ id, ...updateAulaDto });
 
-    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`)
+    if (!aula) throw new NotFoundException(`Aula with id ${id} not found`);
 
     try {
-      await this.AulaRepository.save(aula)
+      await this.AulaRepository.save(aula);
 
       return this.findOne(id);
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-
   }
 
   async remove(id: string) {
-    const aula = await this.findOne(id)
+    const aula = await this.findOne(id);
 
-    await this.AulaRepository.remove(aula)
+    await this.AulaRepository.remove(aula);
 
     return `DELETE HAS BEEN SUCCESSFUL`;
   }
@@ -119,13 +123,9 @@ export class AulaService {
     const query = this.AulaRepository.createQueryBuilder('aula');
 
     try {
-
-      return await query
-        .delete()
-        .where({})
-        .execute();
+      return await query.delete().where({}).execute();
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
 }

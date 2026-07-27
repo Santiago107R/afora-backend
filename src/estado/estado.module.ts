@@ -6,11 +6,8 @@ import { Estado } from './entities/estado.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Estado]),
-    AuthModule
-  ],
+  imports: [TypeOrmModule.forFeature([Estado]), AuthModule],
   controllers: [EstadoController],
   providers: [EstadoService],
 })
-export class EstadoModule { }
+export class EstadoModule {}

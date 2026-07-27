@@ -1,4 +1,10 @@
-import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -13,77 +19,92 @@ import { UpdateAuthDto } from './dto/update-user-auth.dto';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRespository: Repository<User>,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
-  async create(createAuthDto: CreateAuthDto, userRol: ValidRoles | undefined = undefined) {
+  async create(
+    createAuthDto: CreateAuthDto,
+    userRol: ValidRoles | undefined = undefined,
+  ) {
     try {
-      const { password, roles, ...userData } = createAuthDto
+      const { password, roles, ...userData } = createAuthDto;
 
-      if (userRol?.includes(ValidRoles.admin) && !roles.includes(ValidRoles.user)) {
-        throw new ForbiddenException("You can only create users with the 'user' role.")
+      if (
+        userRol?.includes(ValidRoles.admin) &&
+        !roles.includes(ValidRoles.user)
+      ) {
+        throw new ForbiddenException(
+          "You can only create users with the 'user' role.",
+        );
       }
 
       const user = this.userRespository.create({
         ...userData,
         roles,
-        password: bcrypt.hashSync(password, 10)
-      })
+        password: bcrypt.hashSync(password, 10),
+      });
 
-      await this.userRespository.save(user)
+      await this.userRespository.save(user);
 
       return {
         ...user,
-        token: this.getJwtToken({ id: user.id })
-      }
+        token: this.getJwtToken({ id: user.id }),
+      };
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
 
   async login(loginUserDto: LoginUserDto) {
-    const { name, password } = loginUserDto
+    const { name, password } = loginUserDto;
 
     const user = await this.userRespository.findOne({
       where: { name },
-      select: { name: true, password: true, roles: true, id: true }
-    })
+      select: { name: true, password: true, roles: true, id: true },
+    });
 
     if (!user)
-      throw new UnauthorizedException("Credentials are not valid (name or password)")
+      throw new UnauthorizedException(
+        'Credentials are not valid (name or password)',
+      );
 
     if (!bcrypt.compareSync(password, user.password))
-      throw new UnauthorizedException("Credentials are not valid (name or password")
+      throw new UnauthorizedException(
+        'Credentials are not valid (name or password',
+      );
 
     return {
       user,
       token: this.getJwtToken({ id: user.id }),
-    }
+    };
   }
 
   async checkAuthStatus(user) {
-
     return {
       user,
       token: this.getJwtToken({ id: user.id }),
-    }
+    };
   }
 
   private getJwtToken(payload: jwtPayload) {
-
-    const token = this.jwtService.sign(payload)
+    const token = this.jwtService.sign(payload);
 
     return token;
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0, query = undefined, roles = undefined } = paginationDto;
+    const {
+      limit = 10,
+      offset = 0,
+      query = undefined,
+      roles = undefined,
+    } = paginationDto;
 
-    const queryBuilder = this.userRespository.createQueryBuilder('user')
+    const queryBuilder = this.userRespository
+      .createQueryBuilder('user')
       .leftJoinAndSelect('user.clase', 'clase')
       .take(limit)
       .skip(offset);
@@ -93,9 +114,11 @@ export class AuthService {
     }
 
     if (roles && roles.length > 0) {
-      const cleanRoles = roles.map(role => role.trim());
+      const cleanRoles = roles.map((role) => role.trim());
 
-      queryBuilder.andWhere('user.roles @> :cleanRoles::text[]', { cleanRoles });
+      queryBuilder.andWhere('user.roles @> :cleanRoles::text[]', {
+        cleanRoles,
+      });
     }
 
     try {
@@ -120,18 +143,18 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new NotFoundException(`User with id ${id} not found`)
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
-    return user
+    return user;
   }
 
   async update(id: string, updateAuthDto: UpdateAuthDto) {
     const user = await this.userRespository.preload({
       id,
       ...updateAuthDto,
-    })
+    });
 
-    if (!user) throw new NotFoundException(`User with id ${id} not found`)
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
 
     try {
       await this.userRespository.save(user);
@@ -145,7 +168,7 @@ export class AuthService {
   async remove(id: string) {
     const user = await this.findOne(id);
 
-    await this.userRespository.remove(user)
+    await this.userRespository.remove(user);
 
     return `DELETE HAS BEEN SUCCESSFUL`;
   }
@@ -154,13 +177,9 @@ export class AuthService {
     const query = this.userRespository.createQueryBuilder('user');
 
     try {
-
-      return await query
-        .delete()
-        .where({})
-        .execute();
+      return await query.delete().where({}).execute();
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
 }

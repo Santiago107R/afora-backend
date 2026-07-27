@@ -9,11 +9,12 @@ import { Estado } from 'src/estado/entities/estado.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Aula, Estado]), forwardRef(() => AulaSocketModule),
-    AuthModule
+    TypeOrmModule.forFeature([Aula, Estado]),
+    forwardRef(() => AulaSocketModule),
+    AuthModule,
   ],
   controllers: [AulaController],
   providers: [AulaService],
   exports: [AulaService],
 })
-export class AulaModule { }
+export class AulaModule {}

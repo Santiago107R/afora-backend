@@ -7,9 +7,7 @@ export class AulaSocketService {
   constructor(private readonly aulaService: AulaService) {}
 
   async findAll(paginationDto?: PaginationDto) {
-    return this.aulaService.findAll(
-      paginationDto ?? { limit: 10, offset: 0 },
-    );
+    return this.aulaService.findAll(paginationDto ?? { limit: 10, offset: 0 });
   }
 
   async findOne(id: string) {

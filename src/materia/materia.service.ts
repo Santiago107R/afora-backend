@@ -9,14 +9,13 @@ import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class MateriaService {
-
   constructor(
     @InjectRepository(Materia)
-    private readonly materiaRepository: Repository<Materia>
-  ) { }
+    private readonly materiaRepository: Repository<Materia>,
+  ) {}
 
   async create(createMateriaDto: CreateMateriaDto) {
-    const materia = this.materiaRepository.create(createMateriaDto)
+    const materia = this.materiaRepository.create(createMateriaDto);
 
     try {
       await this.materiaRepository.save(materia);
@@ -25,7 +24,6 @@ export class MateriaService {
     } catch (error) {
       handleError(error);
     }
-
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -38,8 +36,8 @@ export class MateriaService {
       },
       skip: offset,
       where: {
-        name: query ? ILike(`%${query}%`) : undefined
-      }
+        name: query ? ILike(`%${query}%`) : undefined,
+      },
     });
 
     const pages = limit > 0 ? Math.ceil(total / limit) : 1;
@@ -48,7 +46,7 @@ export class MateriaService {
       total,
       pages,
       materias,
-    }
+    };
   }
 
   async findOne(id: string) {
@@ -59,7 +57,8 @@ export class MateriaService {
       },
     });
 
-    if (!materia) throw new NotFoundException(`Materia with id ${id} not found`);
+    if (!materia)
+      throw new NotFoundException(`Materia with id ${id} not found`);
 
     return materia;
   }
@@ -68,9 +67,10 @@ export class MateriaService {
     const materia = await this.materiaRepository.preload({
       id,
       ...updateMateriaDto,
-    })
+    });
 
-    if (!materia) throw new NotFoundException(`Materia with id ${id} not found`);
+    if (!materia)
+      throw new NotFoundException(`Materia with id ${id} not found`);
 
     try {
       await this.materiaRepository.save(materia);
@@ -93,14 +93,9 @@ export class MateriaService {
     const query = this.materiaRepository.createQueryBuilder('materia');
 
     try {
-
-      return await query
-        .delete()
-        .where({})
-        .execute();
+      return await query.delete().where({}).execute();
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
-
 }

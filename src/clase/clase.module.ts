@@ -8,13 +8,14 @@ import { ClaseController } from './clase.controller';
 import { ClaseService } from './clase.service';
 import { Materia } from '../materia/entities/materia.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { Excepcion } from 'src/excepcion/entities/excepcion.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Clase, User, Aula, Curso, Materia]),
-        AuthModule
-    ],
-    controllers: [ClaseController],
-    providers: [ClaseService],
+  imports: [
+    TypeOrmModule.forFeature([Clase, User, Aula, Curso, Materia, Excepcion]),
+    AuthModule,
+  ],
+  controllers: [ClaseController],
+  providers: [ClaseService],
 })
-export class ClaseModule { }
+export class ClaseModule {}

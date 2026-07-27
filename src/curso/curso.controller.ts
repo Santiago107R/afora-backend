@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { CursoService } from './curso.service';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
@@ -10,11 +20,15 @@ import { ValidRoles } from 'src/auth/interfaces';
 @ApiTags('Cursos')
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly cursoService: CursoService) { }
+  constructor(private readonly cursoService: CursoService) {}
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
-  @ApiResponse({ status: 201, description: 'Curso was created', type: () => Curso })
+  @ApiResponse({
+    status: 201,
+    description: 'Curso was created',
+    type: () => Curso,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
@@ -50,7 +64,10 @@ export class CursoController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateCursoDto: UpdateCursoDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateCursoDto: UpdateCursoDto,
+  ) {
     return this.cursoService.update(id, updateCursoDto);
   }
 

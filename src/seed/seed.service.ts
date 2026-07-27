@@ -14,8 +14,8 @@ export class SeedService {
     private readonly authService: AuthService,
     private readonly materiaService: MateriaService,
 
-    private readonly configService: ConfigService
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
 
   async runSeed() {
     await this.deleteTables();
@@ -38,9 +38,7 @@ export class SeedService {
   private async insertUsers() {
     const seedUsers = initialData.users;
 
-    await Promise.all(
-      seedUsers.map(user => this.authService.create(user))
-    );
+    await Promise.all(seedUsers.map((user) => this.authService.create(user)));
 
     return true;
   }
@@ -48,9 +46,7 @@ export class SeedService {
   private async insertAulas() {
     const seedAulas = initialData.aulas;
 
-    await Promise.all(
-      seedAulas.map(aula => this.aulaService.create(aula))
-    );
+    await Promise.all(seedAulas.map((aula) => this.aulaService.create(aula)));
 
     return true;
   }
@@ -59,7 +55,7 @@ export class SeedService {
     const seedCursos = initialData.cursos;
 
     await Promise.all(
-      seedCursos.map(curso => this.cursoService.create(curso))
+      seedCursos.map((curso) => this.cursoService.create(curso)),
     );
 
     return true;
@@ -69,11 +65,9 @@ export class SeedService {
     const seedMaterias = initialData.materias;
 
     await Promise.all(
-      seedMaterias.map(materia => this.materiaService.create(materia))
+      seedMaterias.map((materia) => this.materiaService.create(materia)),
     );
 
     return true;
   }
-
-  
 }

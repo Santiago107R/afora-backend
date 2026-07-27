@@ -6,55 +6,55 @@ import {
   Patch,
   Param,
   Delete,
-  ParseUUIDPipe,
   Query,
 } from '@nestjs/common';
-import { MateriaService } from './materia.service';
-import { CreateMateriaDto } from './dto/create-materia.dto';
-import { UpdateMateriaDto } from './dto/update-materia.dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
+import { ExcepcionService } from './excepcion.service';
+import { CreateExcepcionDto } from './dto/create-excepcion.dto';
+import { UpdateExcepcionDto } from './dto/update-excepcion.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Materia } from './entities/materia.entity';
 import { ValidRoles } from 'src/auth/interfaces';
 import { Auth } from 'src/auth/decorators';
-@ApiTags('Materias')
-@Controller('materia')
-export class MateriaController {
-  constructor(private readonly materiaService: MateriaService) {}
+import { Excepcion } from './entities/excepcion.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+
+@ApiTags('Excepcion')
+@Controller('excepcion')
+export class ExcepcionController {
+  constructor(private readonly excepcionService: ExcepcionService) {}
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({
     status: 201,
-    description: 'Materia was created',
-    type: () => Materia,
+    description: 'Estado was created',
+    type: () => Excepcion,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
-  create(@Body() createMateriaDto: CreateMateriaDto) {
-    return this.materiaService.create(createMateriaDto);
+  create(@Body() createExcepcionDto: CreateExcepcionDto) {
+    return this.excepcionService.create(createExcepcionDto);
   }
 
   @Get()
-  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.materiaService.findAll(paginationDto);
+    return this.excepcionService.findAll(paginationDto);
   }
 
   @Get(':id')
-  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.materiaService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.excepcionService.findOne(id);
   }
 
   @Patch(':id')
@@ -65,10 +65,10 @@ export class MateriaController {
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
   update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateMateriaDto: UpdateMateriaDto,
+    @Param('id') id: string,
+    @Body() updateExcepcionDto: UpdateExcepcionDto,
   ) {
-    return this.materiaService.update(id, updateMateriaDto);
+    return this.excepcionService.update(id, updateExcepcionDto);
   }
 
   @Delete(':id')
@@ -78,7 +78,7 @@ export class MateriaController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.materiaService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.excepcionService.remove(id);
   }
 }

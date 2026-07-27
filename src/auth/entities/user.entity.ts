@@ -1,60 +1,56 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
-import { Clase } from "../../clase/entities/clase.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Clase } from '../../clase/entities/clase.entity';
 
 @Entity()
 export class User {
-    @ApiProperty({
-        example: '960c1cca-ecea-4737-a153-1cd83f88685b',
-        description: 'User ID',
-        uniqueItems: true,
-    })
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @ApiProperty({
+    example: '960c1cca-ecea-4737-a153-1cd83f88685b',
+    description: 'User ID',
+    uniqueItems: true,
+  })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @ApiProperty({
-        example: 'Santiago Robles',
-        description: 'User Name',
-        uniqueItems: true
-    })
-    @Column('text', {
-        unique: true
-    })
-    name: string;
+  @ApiProperty({
+    example: 'Santiago Robles',
+    description: 'User Name',
+    uniqueItems: true,
+  })
+  @Column('text', {
+    unique: true,
+  })
+  name: string;
 
-    @ApiProperty({
-        example: '$2b$10$eWx68Vzla0MsFf18AojsMuhp7o2hdkQQpHWEnOocVl70B3JJ9zEqq',
-        description: 'User Password',
-        nullable: false,
-    })
-    @Column('text', {
-        select: false,
-    })
-    password: string;
+  @ApiProperty({
+    example: '$2b$10$eWx68Vzla0MsFf18AojsMuhp7o2hdkQQpHWEnOocVl70B3JJ9zEqq',
+    description: 'User Password',
+    nullable: false,
+  })
+  @Column('text', {
+    select: false,
+  })
+  password: string;
 
-    @ApiProperty({
-        example: 'admin, docente',
-        description: 'User Roles',
-    })
-    @Column('text', {
-        array: true,
-    })
-    roles: string[];
+  @ApiProperty({
+    example: 'admin, docente',
+    description: 'User Roles',
+  })
+  @Column('text', {
+    array: true,
+  })
+  roles: string[];
 
-    @ApiProperty({
-        example: true,
-        description: 'User isActive (this is to ban users)',
-        default: true,
-    })
-    @Column('bool', {
-        default: true,
-    })
-    isActive: boolean;
+  @ApiProperty({
+    example: true,
+    description: 'User isActive (this is to ban users)',
+    default: true,
+  })
+  @Column('bool', {
+    default: true,
+  })
+  isActive: boolean;
 
-    @OneToMany(
-        () => Clase,
-        (clase) => clase.user
-    )
-    clase: Clase[];
-
+  @OneToMany(() => Clase, (clase) => clase.user)
+  clase: Clase[];
 }

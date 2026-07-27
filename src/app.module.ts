@@ -10,6 +10,7 @@ import { AulaSocketModule } from './aula-socket/aula-socket.module';
 import { SeedModule } from './seed/seed.module';
 import { ClaseModule } from './clase/clase.module';
 import { EstadoModule } from './estado/estado.module';
+import { ExcepcionModule } from './excepcion/excepcion.module';
 
 @Module({
   imports: [
@@ -39,22 +40,23 @@ import { EstadoModule } from './estado/estado.module';
     AuthModule,
 
     CommonModule,
-    
+
     AulaModule,
 
     CursoModule,
 
     MateriaModule,
-    
+
     ClaseModule,
-    
+
     AulaSocketModule,
-    
+
     SeedModule,
-    
+
     EstadoModule,
 
+    ExcepcionModule,
   ],
   controllers: [],
 })
-export class AppModule { }
+export class AppModule {}

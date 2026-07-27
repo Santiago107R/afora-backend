@@ -9,11 +9,10 @@ import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class CursoService {
-
   constructor(
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
-  ) { }
+  ) {}
 
   async create(createCursoDto: CreateCursoDto) {
     const curso = this.cursoRepository.create(createCursoDto);
@@ -25,7 +24,6 @@ export class CursoService {
     } catch (error) {
       handleError(error);
     }
-
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -38,8 +36,8 @@ export class CursoService {
         clase: true,
       },
       where: {
-        name: query ? ILike(`%${query}%`) : undefined
-      }
+        name: query ? ILike(`%${query}%`) : undefined,
+      },
     });
 
     const pages = limit > 0 ? Math.ceil(total / limit) : 1;
@@ -48,7 +46,7 @@ export class CursoService {
       total,
       pages,
       cursos,
-    }
+    };
   }
 
   async findOne(id: string) {
@@ -68,7 +66,7 @@ export class CursoService {
     const curso = await this.cursoRepository.preload({
       id,
       ...updateCursoDto,
-    })
+    });
 
     if (!curso) throw new NotFoundException(`Curso with id ${id} not found`);
 
@@ -93,14 +91,9 @@ export class CursoService {
     const query = this.cursoRepository.createQueryBuilder('curso');
 
     try {
-
-      return await query
-        .delete()
-        .where({})
-        .execute();
+      return await query.delete().where({}).execute();
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
   }
-
 }

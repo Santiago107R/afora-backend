@@ -4,26 +4,23 @@ import { Clase } from '../../clase/entities/clase.entity';
 
 @Entity()
 export class Materia {
-    @ApiProperty({
-        example: '3704cbd5-b1d5-40e2-9e34-2549a8e83e12',
-        description: 'Materia ID',
-    })
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @ApiProperty({
+    example: '3704cbd5-b1d5-40e2-9e34-2549a8e83e12',
+    description: 'Materia ID',
+  })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @ApiProperty({
-        example: 'Programación',
-        description: 'Materia Name',
-        uniqueItems: true,
-    })
-    @Column('text', {
-        unique: true,
-    })
-    name: string;
+  @ApiProperty({
+    example: 'Programación',
+    description: 'Materia Name',
+    uniqueItems: true,
+  })
+  @Column('text', {
+    unique: true,
+  })
+  name: string;
 
-    @OneToMany(
-        () => Clase,
-        (clase) => clase.materia,
-    )
-    clase: Clase[];
+  @OneToMany(() => Clase, (clase) => clase.materia)
+  clase: Clase[];
 }

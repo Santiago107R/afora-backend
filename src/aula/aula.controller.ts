@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query, Inject, forwardRef } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+  Query,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { AulaService } from './aula.service';
 import { CreateAulaDto } from './dto/create-aula.dto';
 import { UpdateAulaDto } from './dto/update-aula.dto';
@@ -16,11 +28,15 @@ export class AulaController {
     private readonly aulaService: AulaService,
     @Inject(forwardRef(() => AulaSocketGateway))
     private readonly aulaSocketGateway: AulaSocketGateway,
-  ) { }
+  ) {}
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
-  @ApiResponse({ status: 201, description: 'Aula was created', type: () => Aula })
+  @ApiResponse({
+    status: 201,
+    description: 'Aula was created',
+    type: () => Aula,
+  })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
@@ -58,7 +74,10 @@ export class AulaController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() updateAulaDto: UpdateAulaDto) {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateAulaDto: UpdateAulaDto,
+  ) {
     const aula = await this.aulaService.update(id, updateAulaDto);
     await this.aulaSocketGateway.broadcastAulas();
     return aula;

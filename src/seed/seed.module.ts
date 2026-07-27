@@ -10,12 +10,6 @@ import { MateriaModule } from '../materia/materia.module';
 @Module({
   controllers: [SeedController],
   providers: [SeedService],
-  imports: [
-    AulaModule,
-    CursoModule,
-    MateriaModule,
-    AuthModule,
-    ConfigModule,
-  ],
+  imports: [AulaModule, CursoModule, MateriaModule, AuthModule, ConfigModule],
 })
 export class SeedModule {}

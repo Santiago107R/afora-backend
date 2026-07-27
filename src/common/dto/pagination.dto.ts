@@ -1,7 +1,27 @@
-import { Transform, Type } from "class-transformer"
-import { IsArray, IsIn, IsOptional, IsPositive, IsString, Min } from "class-validator"
-import { State } from "../../aula/interfaces/state-values"
-import { ApiProperty } from "@nestjs/swagger";
+import { Transform, Type } from 'class-transformer';
+import {
+    IsArray,
+    IsIn,
+    IsOptional,
+    IsPositive,
+    IsString,
+    Min,
+} from 'class-validator';
+import { State } from '../../aula/interfaces/state-values';
+import { ApiProperty } from '@nestjs/swagger';
+
+const parseDate = (value: unknown) => {
+    if (!value) return undefined;
+
+    if (value instanceof Date) return value;
+
+    if (typeof value === 'string') {
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+    }
+
+    return undefined;
+};
 
 export class PaginationDto {
     @ApiProperty({
@@ -11,7 +31,7 @@ export class PaginationDto {
     @IsOptional()
     @IsPositive()
     @Type(() => Number)
-    limit?: number
+    limit?: number;
 
     @ApiProperty({
         description: 'Pagination Offset',
@@ -19,7 +39,7 @@ export class PaginationDto {
     })
     @IsOptional()
     @Type(() => Number)
-    offset?: number
+    offset?: number;
 
     @ApiProperty({
         description: 'Pagination Query',
@@ -35,7 +55,7 @@ export class PaginationDto {
     })
     @IsOptional()
     @IsIn(['available', 'busy', 'maintenance'])
-    state?: State
+    state?: State;
 
     @ApiProperty({
         description: 'Pagination Roles',
@@ -44,6 +64,48 @@ export class PaginationDto {
     @IsOptional()
     @IsArray()
     @IsString({ each: true })
-    @Transform(({ value }) => typeof value === 'string' ? value.split(',') : value)
+    @Transform(({ value }) =>
+        typeof value === 'string' ? value.split(',') : value,
+    )
     roles?: string[];
+
+    @ApiProperty({
+        description: 'Filter by exact date (YYYY-MM-DD)',
+        nullable: true,
+    })
+    @IsOptional()
+    @Transform(({ value }) => parseDate(value))
+    date?: Date;
+
+    @ApiProperty({
+        description: 'Filter by start time (HH:mm)',
+        nullable: true,
+    })
+    @IsOptional()
+    @IsString()
+    startTime?: string;
+
+    @ApiProperty({
+        description: 'Filter by end time (HH:mm)',
+        nullable: true,
+    })
+    @IsOptional()
+    @IsString()
+    endTime?: string;
+
+    @ApiProperty({
+        description: 'Filter by start date (YYYY-MM-DD)',
+        nullable: true,
+    })
+    @IsOptional()
+    @Transform(({ value }) => parseDate(value))
+    startDate?: Date;
+
+    @ApiProperty({
+        description: 'Filter by end date (YYYY-MM-DD)',
+        nullable: true,
+    })
+    @IsOptional()
+    @Transform(({ value }) => parseDate(value))
+    endDate?: Date;
 }
