@@ -40,20 +40,11 @@ export class Aula {
     @Column('int')
     capacity: number;
 
-    @ApiProperty({
-        example: 1,
-        description: 'Estado ID del Aula',
-        default: 1,
-    })
-    @Column({ type: 'int', default: 1 })
-    id_estado: number;
-
     @ManyToOne(
         () => Estado,
         (estado) => estado.aula,
         { eager: true, nullable: false },
     )
-    @JoinColumn({ name: 'id_estado' })
     estado: Estado;
 
     @OneToMany(

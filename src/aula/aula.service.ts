@@ -27,7 +27,7 @@ export class AulaService {
     if (!estado) throw new NotFoundException(`Estado with id ${id_estado} not found`)
 
     const aula = this.AulaRepository.create({
-      id_estado,
+      estado,
       ...rest
     })
 
