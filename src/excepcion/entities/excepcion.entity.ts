@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Aula } from 'src/aula/entities/aula.entity';
-import { User } from 'src/auth/entities/user.entity';
-import { Clase } from 'src/clase/entities/clase.entity';
+import { Aula } from '../../aula/entities/aula.entity';
+import { User } from '../../auth/entities/user.entity';
+import { Clase } from '../../clase/entities/clase.entity';
 import {
   Column,
   Entity,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Aula } from 'src/aula/entities/aula.entity';
+import { Aula } from '../../aula/entities/aula.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
