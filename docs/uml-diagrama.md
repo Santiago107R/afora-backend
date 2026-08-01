@@ -22,7 +22,7 @@ Materia "1" --> "*" Clase : materia
 Clase "1" --> "*" Excepcion : clase
 User "1" --> "*" Excepcion : user
 Aula "1" --> "*" Excepcion : aula
-Cargo "1" --> "*" User : isActive
+Cargo "1" --> "*" User : cargo
 ```
 
 ## Entidades detectadas
