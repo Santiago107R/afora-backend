@@ -36,10 +36,15 @@ export class AuthService {
     try {
       const { password, id_cargo, roles, ...userData } = createAuthDto;
 
-      const cargo = await this.cargoRepository.findOneBy({ id: id_cargo });
+      let cargo: Cargo | null = null;
 
-      if (!cargo)
-        throw new NotFoundException(`Cargo with id '${id_cargo}' not found`);
+      if (id_cargo) {
+        cargo = await this.cargoRepository.findOneBy({ id: id_cargo });
+
+        if (!cargo) {
+          throw new NotFoundException(`Cargo with id '${id_cargo}' not found`);
+        }
+      }
 
       if (
         userRol?.includes(ValidRoles.admin) &&
@@ -53,7 +58,7 @@ export class AuthService {
       const user = this.userRespository.create({
         ...userData,
         roles,
-        cargo,
+        cargo: cargo ?? undefined,
         password: bcrypt.hashSync(password, 10),
       });
 

@@ -44,16 +44,21 @@ export class User {
     description: 'User Email',
     nullable: true,
   })
-  @Column('text')
+  @Column('text', {
+    nullable: true,
+  })
   email?: string;
 
   @ApiProperty({
     example: 1,
     description: 'Cargo ID',
-    nullable: false,
+    nullable: true,
   })
-  @ManyToOne(() => Cargo, (cargo) => cargo.user)
-  cargo: Cargo;
+  @ManyToOne(() => Cargo, (cargo) => cargo.user, {
+    eager: true,
+    nullable: true,
+  })
+  cargo?: Cargo;
 
   @ApiProperty({
     example: 'admin, docente',
