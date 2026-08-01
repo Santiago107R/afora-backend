@@ -1,6 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Clase } from '../../clase/entities/clase.entity';
+import { Cargo } from 'src/cargo/entities/cargo.entity';
 
 @Entity()
 export class User {
@@ -31,6 +38,22 @@ export class User {
     select: false,
   })
   password: string;
+
+  @ApiProperty({
+    example: 'Juan100@gmail.com',
+    description: 'User Email',
+    nullable: true,
+  })
+  @Column('text')
+  email?: string;
+
+  @ApiProperty({
+    example: 1,
+    description: 'Cargo ID',
+    nullable: false,
+  })
+  @ManyToOne(() => Cargo, (cargo) => cargo.user)
+  cargo: Cargo;
 
   @ApiProperty({
     example: 'admin, docente',

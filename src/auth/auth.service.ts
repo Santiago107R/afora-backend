@@ -16,6 +16,7 @@ import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { handleError } from '../common/utils/handle-errors';
 import { UpdateAuthDto } from './dto/update-user-auth.dto';
+import { Cargo } from 'src/cargo/entities/cargo.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,9 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRespository: Repository<User>,
     private readonly jwtService: JwtService,
+
+    @InjectRepository(Cargo)
+    private readonly cargoRepository: Repository<Cargo>,
   ) {}
 
   async create(
@@ -30,7 +34,12 @@ export class AuthService {
     userRol: ValidRoles | undefined = undefined,
   ) {
     try {
-      const { password, roles, ...userData } = createAuthDto;
+      const { password, id_cargo, roles, ...userData } = createAuthDto;
+
+      const cargo = await this.cargoRepository.findOneBy({ id: id_cargo });
+
+      if (!cargo)
+        throw new NotFoundException(`Cargo with id '${id_cargo}' not found`);
 
       if (
         userRol?.includes(ValidRoles.admin) &&
@@ -44,6 +53,7 @@ export class AuthService {
       const user = this.userRespository.create({
         ...userData,
         roles,
+        cargo,
         password: bcrypt.hashSync(password, 10),
       });
 
@@ -149,9 +159,17 @@ export class AuthService {
   }
 
   async update(id: string, updateAuthDto: UpdateAuthDto) {
+    const { id_cargo, ...rest } = updateAuthDto;
+
+    const cargo = await this.cargoRepository.findOneBy({ id: id_cargo });
+
+    if (!cargo)
+      throw new NotFoundException(`Cargo with id '${id_cargo}' not found`);
+
     const user = await this.userRespository.preload({
       id,
-      ...updateAuthDto,
+      cargo,
+      ...rest,
     });
 
     if (!user) throw new NotFoundException(`User with id ${id} not found`);

@@ -1,8 +1,8 @@
 import {
-    BadRequestException,
-    Injectable,
-    Logger,
-    NotFoundException,
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
@@ -18,163 +18,163 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ClaseService {
-    constructor(
-        @InjectRepository(Clase)
-        private readonly claseRepository: Repository<Clase>,
+  constructor(
+    @InjectRepository(Clase)
+    private readonly claseRepository: Repository<Clase>,
 
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
 
-        @InjectRepository(Aula)
-        private readonly aulaRepository: Repository<Aula>,
+    @InjectRepository(Aula)
+    private readonly aulaRepository: Repository<Aula>,
 
-        @InjectRepository(Curso)
-        private readonly cursoRepository: Repository<Curso>,
+    @InjectRepository(Curso)
+    private readonly cursoRepository: Repository<Curso>,
 
-        @InjectRepository(Materia)
-        private readonly materiaRepository: Repository<Materia>,
-    ) { }
+    @InjectRepository(Materia)
+    private readonly materiaRepository: Repository<Materia>,
+  ) {}
 
-    async create(createClaseDto: CreateClaseDto) {
-        const { id_user, id_aula, id_curso, id_materia, ...rest } = createClaseDto;
+  async create(createClaseDto: CreateClaseDto) {
+    const { id_user, id_aula, id_curso, id_materia, ...rest } = createClaseDto;
 
-        const [user, aula, curso, materia] = await Promise.all([
-            this.userRepository.findOneBy({ id: id_user }),
-            this.aulaRepository.findOneBy({ id: id_aula }),
-            this.cursoRepository.findOneBy({ id: id_curso }),
-            this.materiaRepository.findOneBy({ id: id_materia }),
-        ]);
+    const [user, aula, curso, materia] = await Promise.all([
+      this.userRepository.findOneBy({ id: id_user }),
+      this.aulaRepository.findOneBy({ id: id_aula }),
+      this.cursoRepository.findOneBy({ id: id_curso }),
+      this.materiaRepository.findOneBy({ id: id_materia }),
+    ]);
 
-        if (!user)
-            throw new BadRequestException(`User no encontrado con id ${id_user}`);
-        if (!user.roles?.includes('user')) {
-            throw new BadRequestException('El usuario no tiene rol user');
-        }
-        if (!aula)
-            throw new BadRequestException(`Aula no encontrada con id ${id_aula}`);
-        if (!curso)
-            throw new BadRequestException(`Curso no encontrado con id ${id_curso}`);
-        if (!materia)
-            throw new BadRequestException(
-                `Materia no encontrado con id ${id_materia}`,
-            );
+    if (!user)
+      throw new BadRequestException(`User no encontrado con id ${id_user}`);
+    if (!user.roles?.includes('user')) {
+      throw new BadRequestException('El usuario no tiene rol user');
+    }
+    if (!aula)
+      throw new BadRequestException(`Aula no encontrada con id ${id_aula}`);
+    if (!curso)
+      throw new BadRequestException(`Curso no encontrado con id ${id_curso}`);
+    if (!materia)
+      throw new BadRequestException(
+        `Materia no encontrado con id ${id_materia}`,
+      );
 
-        const clase = this.claseRepository.create({
-            user,
-            aula,
-            curso,
-            materia,
-            ...rest,
-        });
+    const clase = this.claseRepository.create({
+      user,
+      aula,
+      curso,
+      materia,
+      ...rest,
+    });
 
-        try {
-            await this.claseRepository.save(clase);
-            return clase;
-        } catch (error) {
-            handleError(error);
-        }
+    try {
+      await this.claseRepository.save(clase);
+      return clase;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0, startTime, endTime } = paginationDto;
+
+    const where: Record<string, any> = {};
+
+    if (startTime || endTime) {
+      if (startTime && endTime) {
+        where.startTime = Between(startTime, endTime);
+        where.endTime = Between(startTime, endTime);
+      } else if (startTime) {
+        where.startTime = MoreThanOrEqual(startTime);
+      } else if (endTime) {
+        where.endTime = LessThanOrEqual(endTime);
+      }
     }
 
-    async findAll(paginationDto: PaginationDto) {
-        const { limit = 10, offset = 0, startTime, endTime } = paginationDto;
+    const [clases, total] = await this.claseRepository.findAndCount({
+      take: limit,
+      skip: offset,
+      where,
+    });
 
-        const where: Record<string, any> = {};
+    const pages = limit > 0 ? Math.ceil(total / limit) : 1;
 
-        if (startTime || endTime) {
-            if (startTime && endTime) {
-                where.startTime = Between(startTime, endTime);
-                where.endTime = Between(startTime, endTime);
-            } else if (startTime) {
-                where.startTime = MoreThanOrEqual(startTime);
-            } else if (endTime) {
-                where.endTime = LessThanOrEqual(endTime);
-            }
-        }
+    return {
+      total,
+      pages,
+      clases,
+    };
+  }
 
-        const [clases, total] = await this.claseRepository.findAndCount({
-            take: limit,
-            skip: offset,
-            where,
-        });
+  async findOne(id: string) {
+    const clase = await this.claseRepository.findOne({ where: { id } });
 
-        const pages = limit > 0 ? Math.ceil(total / limit) : 1;
+    if (!clase)
+      throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
 
-        return {
-            total,
-            pages,
-            clases,
-        };
+    return clase;
+  }
+
+  async update(id: string, updateClaseDto: UpdateClaseDto) {
+    const { id_user, id_aula, id_curso, id_materia, ...rest } = updateClaseDto;
+
+    let user: User | null = null;
+    let aula: Aula | null = null;
+    let curso: Curso | null = null;
+    let materia: Materia | null = null;
+
+    if (id_user) {
+      user = await this.userRepository.findOneBy({ id: id_user });
+      if (!user)
+        throw new NotFoundException(`User no encontrado con id ${id_user}`);
+      if (!user.roles?.includes('user')) {
+        throw new BadRequestException('El usuario no tiene rol user');
+      }
     }
 
-    async findOne(id: string) {
-        const clase = await this.claseRepository.findOne({ where: { id } });
-
-        if (!clase)
-            throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
-
-        return clase;
+    if (id_aula) {
+      aula = await this.aulaRepository.findOneBy({ id: id_aula });
+      if (!aula)
+        throw new BadRequestException(`Aula no encontrada con id ${id_aula}`);
     }
 
-    async update(id: string, updateClaseDto: UpdateClaseDto) {
-        const { id_user, id_aula, id_curso, id_materia, ...rest } = updateClaseDto;
-
-        let user: User | null = null;
-        let aula: Aula | null = null;
-        let curso: Curso | null = null;
-        let materia: Materia | null = null;
-
-        if (id_user) {
-            user = await this.userRepository.findOneBy({ id: id_user });
-            if (!user)
-                throw new NotFoundException(`User no encontrado con id ${id_user}`);
-            if (!user.roles?.includes('user')) {
-                throw new BadRequestException('El usuario no tiene rol user');
-            }
-        }
-
-        if (id_aula) {
-            aula = await this.aulaRepository.findOneBy({ id: id_aula });
-            if (!aula)
-                throw new BadRequestException(`Aula no encontrada con id ${id_aula}`);
-        }
-
-        if (id_curso) {
-            curso = await this.cursoRepository.findOneBy({ id: id_curso });
-            if (!curso)
-                throw new BadRequestException(`Curso no encontrado con id ${id_curso}`);
-        }
-
-        if (id_materia) {
-            materia = await this.materiaRepository.findOneBy({ id: id_materia });
-            if (!materia)
-                throw new BadRequestException(
-                    `Materia no encontrado con id ${id_materia}`,
-                );
-        }
-
-        const clase = await this.claseRepository.preload({
-            id,
-            ...rest,
-            ...(user ? { user } : {}),
-            ...(aula ? { aula } : {}),
-            ...(curso ? { curso } : {}),
-            ...(materia ? { materia } : {}),
-        });
-
-        if (!clase)
-            throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
-
-        try {
-            await this.claseRepository.save(clase);
-            return clase;
-        } catch (error) {
-            handleError(error);
-        }
+    if (id_curso) {
+      curso = await this.cursoRepository.findOneBy({ id: id_curso });
+      if (!curso)
+        throw new BadRequestException(`Curso no encontrado con id ${id_curso}`);
     }
 
-    async remove(id: string) {
-        const clase = await this.findOne(id);
-        await this.claseRepository.remove(clase);
-        return 'DELETED SUCCESSFULLY';
+    if (id_materia) {
+      materia = await this.materiaRepository.findOneBy({ id: id_materia });
+      if (!materia)
+        throw new BadRequestException(
+          `Materia no encontrado con id ${id_materia}`,
+        );
     }
+
+    const clase = await this.claseRepository.preload({
+      id,
+      ...rest,
+      ...(user ? { user } : {}),
+      ...(aula ? { aula } : {}),
+      ...(curso ? { curso } : {}),
+      ...(materia ? { materia } : {}),
+    });
+
+    if (!clase)
+      throw new NotFoundException(`Registro clase con id ${id} no encontrado`);
+
+    try {
+      await this.claseRepository.save(clase);
+      return clase;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  async remove(id: string) {
+    const clase = await this.findOne(id);
+    await this.claseRepository.remove(clase);
+    return 'DELETED SUCCESSFULLY';
+  }
 }

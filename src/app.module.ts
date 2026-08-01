@@ -11,6 +11,7 @@ import { SeedModule } from './seed/seed.module';
 import { ClaseModule } from './clase/clase.module';
 import { EstadoModule } from './estado/estado.module';
 import { ExcepcionModule } from './excepcion/excepcion.module';
+import { CargoModule } from './cargo/cargo.module';
 
 @Module({
   imports: [
@@ -56,6 +57,8 @@ import { ExcepcionModule } from './excepcion/excepcion.module';
     EstadoModule,
 
     ExcepcionModule,
+
+    CargoModule,
   ],
   controllers: [],
 })

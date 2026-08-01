@@ -32,6 +32,22 @@ export class CreateAuthDto {
   password: string;
 
   @ApiProperty({
+    description: 'User Email',
+  })
+  @IsString()
+  @IsOptional()
+  email?: string;
+
+  @ApiProperty({
+    example: 1,
+    description: 'ID del cargo del user',
+    default: 1,
+  })
+  @IsOptional()
+  @IsPositive()
+  id_cargo?: number;
+
+  @ApiProperty({
     description: 'User Roles',
   })
   @IsArray()

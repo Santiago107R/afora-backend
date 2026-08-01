@@ -98,7 +98,14 @@ export class AulaService {
   }
 
   async update(id: string, updateAulaDto: UpdateAulaDto) {
-    const aula = await this.AulaRepository.preload({ id, ...updateAulaDto });
+    const { id_estado, ...rest } = updateAulaDto;
+
+    const estado = await this.estadoRepository.findOneBy({ id: id_estado });
+
+    if (!estado)
+      throw new NotFoundException(`Estado with id ${id_estado} not found`);
+
+    const aula = await this.AulaRepository.preload({ id, estado, ...rest });
 
     if (!aula) throw new NotFoundException(`Aula with id ${id} not found`);
 

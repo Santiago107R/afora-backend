@@ -1,61 +1,59 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
-  ParseUUIDPipe,
+  Body,
+  Patch,
+  Param,
+  Delete,
   Query,
 } from '@nestjs/common';
-import { ClaseService } from './clase.service';
-import { CreateClaseDto } from './dto/create-clase.dto';
-import { UpdateClaseDto } from './dto/update-clase.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Clase } from './entities/clase.entity';
+import { CargoService } from './cargo.service';
+import { CreateCargoDto } from './dto/create-cargo.dto';
+import { UpdateCargoDto } from './dto/update-cargo.dto';
 import { Auth } from 'src/auth/decorators';
+import { ApiResponse } from '@nestjs/swagger';
 import { ValidRoles } from 'src/auth/interfaces';
+import { Cargo } from './entities/cargo.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
-@ApiTags('Clase')
-@Controller('clase')
-export class ClaseController {
-  constructor(private readonly claseService: ClaseService) {}
+@Controller('cargo')
+export class CargoController {
+  constructor(private readonly cargoService: CargoService) {}
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({
     status: 201,
-    description: 'Clase was created',
-    type: () => Clase,
+    description: 'Cargo was created',
+    type: () => Cargo,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
-  create(@Body() createClaseDto: CreateClaseDto) {
-    return this.claseService.create(createClaseDto);
+  create(@Body() createCargoDto: CreateCargoDto) {
+    return this.cargoService.create(createCargoDto);
   }
 
   @Get()
-  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.claseService.findAll(paginationDto);
+    return this.cargoService.findAll(paginationDto);
   }
 
   @Get(':id')
-  @Auth(ValidRoles.super_user, ValidRoles.admin, ValidRoles.user)
+  @Auth(ValidRoles.super_user, ValidRoles.admin)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.claseService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.cargoService.findOne(+id);
   }
 
   @Patch(':id')
@@ -65,11 +63,8 @@ export class ClaseController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateClaseDto: UpdateClaseDto,
-  ) {
-    return this.claseService.update(id, updateClaseDto);
+  update(@Param('id') id: string, @Body() updateCargoDto: UpdateCargoDto) {
+    return this.cargoService.update(+id, updateCargoDto);
   }
 
   @Delete(':id')
@@ -79,7 +74,7 @@ export class ClaseController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token related' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.claseService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.cargoService.remove(+id);
   }
 }
