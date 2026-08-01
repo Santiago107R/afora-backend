@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Clase } from '../../clase/entities/clase.entity';
-import { Estado } from 'src/estado/entities/estado.entity';
+import { Estado } from '../../estado/entities/estado.entity';
 
 @Entity()
 export class Aula {
