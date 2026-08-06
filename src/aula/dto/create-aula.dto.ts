@@ -51,11 +51,8 @@ export class CreateAulaDto {
 
   @ApiProperty({
     description: 'Aula type of classroom',
-    minimum: 1,
   })
-  @IsNumber()
-  @IsPositive()
-  @Min(1)
+  @IsIn(["inicial", "primaria", "secundaria", "taller"])
   classroomType: classroomType;
 
   @ApiProperty({
