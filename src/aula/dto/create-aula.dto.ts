@@ -71,7 +71,8 @@ export class CreateAulaDto {
   @IsNumber()
   @IsPositive()
   @Min(1)
-  capacity: number;
+  @IsOptional()
+  capacity?: number;
 
   @ApiProperty({
     example: 1,
