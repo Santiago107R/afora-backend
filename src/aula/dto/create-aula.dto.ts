@@ -7,8 +7,8 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { State } from '../interfaces/state-values';
 import { ApiProperty } from '@nestjs/swagger';
+import { classroomType } from '../../common/utils/aforo.util';
 
 export class CreateAulaDto {
   @ApiProperty({
@@ -29,6 +29,43 @@ export class CreateAulaDto {
   @IsString()
   @MinLength(1)
   description?: string;
+
+
+  @ApiProperty({
+    description: 'Aula square meters',
+    minimum: 1,
+  })
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  squareMeters: number;
+
+  @ApiProperty({
+    description: 'Aula meters high',
+    minimum: 1,
+  })
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  heightInMeters: number;
+
+  @ApiProperty({
+    description: 'Aula type of classroom',
+    minimum: 1,
+  })
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  classroomType: classroomType;
+
+  @ApiProperty({
+    description: 'Aula deduct space per teacher',
+    minimum: 1,
+  })
+  @IsNumber()
+  @IsPositive()
+  @Min(1)
+  deductTeacherSpace: number;
 
   @ApiProperty({
     description: 'Aula Capacity',

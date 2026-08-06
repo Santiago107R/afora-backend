@@ -41,6 +41,35 @@ export class Aula {
   description?: string;
 
   @ApiProperty({
+    example: 45.5,
+    description: 'Aula square meters',
+  })
+  @Column('float')
+  squareMeters: number;
+
+  @ApiProperty({
+    example: 3.2,
+    description: 'Aula height in meters',
+  })
+  @Column('float')
+  heightInMeters: number;
+
+  @ApiProperty({
+    example: 'secundaria',
+    description: 'Type of Aula (inicial, primaria, secundaria, taller)',
+  })
+  @Column('text')
+  classroomType: string;
+
+  @ApiProperty({
+    example: 5,
+    description: 'Space deducted for teacher or machinery in square meters',
+    nullable: true,
+  })
+  @Column('float', { nullable: true })
+  deductTeacherSpace?: number;
+
+  @ApiProperty({
     example: 30,
     description: 'Aula capacity',
   })
