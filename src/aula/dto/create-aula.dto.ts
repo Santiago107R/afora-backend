@@ -57,12 +57,12 @@ export class CreateAulaDto {
 
   @ApiProperty({
     description: 'Aula deduct space per teacher',
-    minimum: 1,
+    minimum: 5,
   })
   @IsNumber()
   @IsPositive()
-  @Min(1)
-  deductTeacherSpace: number;
+  @IsOptional()
+  deductTeacherSpace?: number;
 
   @ApiProperty({
     description: 'Aula Capacity',
