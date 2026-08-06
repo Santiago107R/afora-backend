@@ -7,8 +7,8 @@ import { Curso } from '../curso/entities/curso.entity';
 import { ClaseController } from './clase.controller';
 import { ClaseService } from './clase.service';
 import { Materia } from '../materia/entities/materia.entity';
-import { AuthModule } from 'src/auth/auth.module';
-import { Excepcion } from 'src/excepcion/entities/excepcion.entity';
+import { AuthModule } from '../auth/auth.module';
+import { Excepcion } from '../excepcion/entities/excepcion.entity';
 
 @Module({
   imports: [
@@ -18,4 +18,4 @@ import { Excepcion } from 'src/excepcion/entities/excepcion.entity';
   controllers: [ClaseController],
   providers: [ClaseService],
 })
-export class ClaseModule {}
+export class ClaseModule { }

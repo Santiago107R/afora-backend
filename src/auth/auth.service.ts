@@ -16,7 +16,7 @@ import { LoginUserDto } from './dto/login-auth.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { handleError } from '../common/utils/handle-errors';
 import { UpdateAuthDto } from './dto/update-user-auth.dto';
-import { Cargo } from 'src/cargo/entities/cargo.entity';
+import { Cargo } from '../cargo/entities/cargo.entity';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
 
     @InjectRepository(Cargo)
     private readonly cargoRepository: Repository<Cargo>,
-  ) {}
+  ) { }
 
   async create(
     createAuthDto: CreateAuthDto,

@@ -8,15 +8,15 @@ import { UpdateCargoDto } from './dto/update-cargo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cargo } from './entities/cargo.entity';
 import { ILike, Repository } from 'typeorm';
-import { handleError } from 'src/common/utils/handle-errors';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { handleError } from '../common/utils/handle-errors';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class CargoService {
   constructor(
     @InjectRepository(Cargo)
     private readonly cargoRepository: Repository<Cargo>,
-  ) {}
+  ) { }
 
   async create(createCargoDto: CreateCargoDto) {
     const cargo = this.cargoRepository.create(createCargoDto);

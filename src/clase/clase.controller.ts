@@ -14,14 +14,14 @@ import { CreateClaseDto } from './dto/create-clase.dto';
 import { UpdateClaseDto } from './dto/update-clase.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Clase } from './entities/clase.entity';
-import { Auth } from 'src/auth/decorators';
-import { ValidRoles } from 'src/auth/interfaces';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Auth } from '../auth/decorators';
+import { ValidRoles } from '../auth/interfaces';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @ApiTags('Clase')
 @Controller('clase')
 export class ClaseController {
-  constructor(private readonly claseService: ClaseService) {}
+  constructor(private readonly claseService: ClaseService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)

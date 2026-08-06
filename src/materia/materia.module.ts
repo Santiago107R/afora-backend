@@ -3,7 +3,7 @@ import { MateriaService } from './materia.service';
 import { MateriaController } from './materia.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Materia } from './entities/materia.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [MateriaController],
@@ -11,4 +11,4 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [TypeOrmModule.forFeature([Materia]), AuthModule],
   exports: [MateriaService],
 })
-export class MateriaModule {}
+export class MateriaModule { }

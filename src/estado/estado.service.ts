@@ -8,15 +8,15 @@ import { UpdateEstadoDto } from './dto/update-estado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Estado } from './entities/estado.entity';
 import { ILike, Repository } from 'typeorm';
-import { handleError } from 'src/common/utils/handle-errors';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { handleError } from '../common/utils/handle-errors';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class EstadoService {
   constructor(
     @InjectRepository(Estado)
     private readonly estadoRepository: Repository<Estado>,
-  ) {}
+  ) { }
 
   async create(createEstadoDto: CreateEstadoDto) {
     const estado = this.estadoRepository.create(createEstadoDto);

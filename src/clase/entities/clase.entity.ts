@@ -11,7 +11,7 @@ import { Aula } from '../../aula/entities/aula.entity';
 import { Curso } from '../../curso/entities/curso.entity';
 import { Materia } from '../../materia/entities/materia.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Excepcion } from 'src/excepcion/entities/excepcion.entity';
+import { Excepcion } from '../../excepcion/entities/excepcion.entity';
 
 @Entity()
 export class Clase {

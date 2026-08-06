@@ -3,7 +3,7 @@ import { CursoService } from './curso.service';
 import { CursoController } from './curso.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Curso } from './entities/curso.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [CursoController],
@@ -11,4 +11,4 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [TypeOrmModule.forFeature([Curso]), AuthModule],
   exports: [CursoService],
 })
-export class CursoModule {}
+export class CursoModule { }

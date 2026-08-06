@@ -15,6 +15,10 @@ interface SeedUser {
 interface SeedAula {
   name: string;
   description?: string;
+  squareMeters: number;
+  heightInMeters: number;
+  classroomType: 'inicial' | 'primaria' | 'secundaria' | 'taller';
+  deductTeacherSpace: number;
   capacity: number;
   state: EstadoAula;
 }
@@ -68,24 +72,40 @@ export const initialData: SeedData = {
     {
       name: 'Laboratorio de Informática 1',
       description: 'Sala equipada con 30 computadoras y proyector',
+      squareMeters: 80,
+      heightInMeters: 3.2,
+      classroomType: 'secundaria',
+      deductTeacherSpace: 6,
       capacity: 30,
       state: State.AVAILABLE,
     },
     {
       name: 'Aula 102',
       description: 'Aula común con pizarrón tradicional',
+      squareMeters: 70,
+      heightInMeters: 3.0,
+      classroomType: 'primaria',
+      deductTeacherSpace: 4,
       capacity: 35,
       state: State.AVAILABLE,
     },
     {
       name: 'Laboratorio de alimentos',
       description: 'Mesas de trabajo con microscopios y tubos',
+      squareMeters: 65,
+      heightInMeters: 3.2,
+      classroomType: 'taller',
+      deductTeacherSpace: 8,
       capacity: 25,
       state: State.MAINTENANCE,
     },
     {
       name: 'Biblioteca',
       description: 'Espacio de lectura y estudio silencioso',
+      squareMeters: 90,
+      heightInMeters: 3.0,
+      classroomType: 'secundaria',
+      deductTeacherSpace: 5,
       capacity: 50,
       state: State.BUSY,
     },

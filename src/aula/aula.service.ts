@@ -20,7 +20,7 @@ export class AulaService {
   ) { }
 
   async create(createAulaDto: CreateAulaDto) {
-    const { id_estado, ...datosDelAula } = createAulaDto;
+    const { id_estado = 1, ...datosDelAula } = createAulaDto;
 
     const capacity = calcularAforoAula({
       squareMeters: createAulaDto.squareMeters,

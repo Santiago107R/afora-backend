@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { classroomType } from '../../common/utils/aforo.util';
+import type { classroomType } from '../../common/utils/aforo.util';
 
 export class CreateAulaDto {
   @ApiProperty({

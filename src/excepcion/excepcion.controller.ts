@@ -12,15 +12,15 @@ import { ExcepcionService } from './excepcion.service';
 import { CreateExcepcionDto } from './dto/create-excepcion.dto';
 import { UpdateExcepcionDto } from './dto/update-excepcion.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ValidRoles } from 'src/auth/interfaces';
-import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from '../auth/interfaces';
+import { Auth } from '../auth/decorators';
 import { Excepcion } from './entities/excepcion.entity';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @ApiTags('Excepcion')
 @Controller('excepcion')
 export class ExcepcionController {
-  constructor(private readonly excepcionService: ExcepcionService) {}
+  constructor(private readonly excepcionService: ExcepcionService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)

@@ -14,7 +14,7 @@ import { Aula } from '../aula/entities/aula.entity';
 import { Curso } from '../curso/entities/curso.entity';
 import { handleError } from '../common/utils/handle-errors';
 import { Materia } from '../materia/entities/materia.entity';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class ClaseService {
@@ -33,7 +33,7 @@ export class ClaseService {
 
     @InjectRepository(Materia)
     private readonly materiaRepository: Repository<Materia>,
-  ) {}
+  ) { }
 
   async create(createClaseDto: CreateClaseDto) {
     const { id_user, id_aula, id_curso, id_materia, ...rest } = createClaseDto;

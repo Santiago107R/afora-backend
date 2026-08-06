@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateExcepcionDto } from './dto/create-excepcion.dto';
 import { UpdateExcepcionDto } from './dto/update-excepcion.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Excepcion } from './entities/excepcion.entity';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { Clase } from 'src/clase/entities/clase.entity';
-import { User } from 'src/auth/entities/user.entity';
-import { Aula } from 'src/aula/entities/aula.entity';
-import { handleError } from 'src/common/utils/handle-errors';
+import { Clase } from '../clase/entities/clase.entity';
+import { User } from '../auth/entities/user.entity';
+import { Aula } from '../aula/entities/aula.entity';
+import { handleError } from '../common/utils/handle-errors';
 
 @Injectable()
 export class ExcepcionService {
@@ -24,7 +24,7 @@ export class ExcepcionService {
 
     @InjectRepository(Aula)
     private readonly aulaRepository: Repository<Aula>,
-  ) {}
+  ) { }
 
   async create(createExcepcionDto: CreateExcepcionDto) {
     const { id_clase, id_user, id_aula, ...rest } = createExcepcionDto;

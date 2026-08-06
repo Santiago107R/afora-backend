@@ -11,16 +11,16 @@ import {
 import { EstadoService } from './estado.service';
 import { CreateEstadoDto } from './dto/create-estado.dto';
 import { UpdateEstadoDto } from './dto/update-estado.dto';
-import { Auth } from 'src/auth/decorators';
+import { Auth } from '../auth/decorators';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ValidRoles } from 'src/auth/interfaces';
+import { ValidRoles } from '../auth/interfaces';
 import { Estado } from './entities/estado.entity';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @ApiTags('Estados')
 @Controller('estado')
 export class EstadoController {
-  constructor(private readonly estadoService: EstadoService) {}
+  constructor(private readonly estadoService: EstadoService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)

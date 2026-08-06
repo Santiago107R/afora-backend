@@ -3,7 +3,7 @@ import { CargoService } from './cargo.service';
 import { CargoController } from './cargo.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cargo } from './entities/cargo.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [CargoController],

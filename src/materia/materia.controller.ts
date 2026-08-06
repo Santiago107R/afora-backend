@@ -15,12 +15,12 @@ import { UpdateMateriaDto } from './dto/update-materia.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Materia } from './entities/materia.entity';
-import { ValidRoles } from 'src/auth/interfaces';
-import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from '../auth/interfaces';
+import { Auth } from '../auth/decorators';
 @ApiTags('Materias')
 @Controller('materia')
 export class MateriaController {
-  constructor(private readonly materiaService: MateriaService) {}
+  constructor(private readonly materiaService: MateriaService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)

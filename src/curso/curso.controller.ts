@@ -15,12 +15,12 @@ import { UpdateCursoDto } from './dto/update-curso.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { Curso } from './entities/curso.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators';
-import { ValidRoles } from 'src/auth/interfaces';
+import { Auth } from '../auth/decorators';
+import { ValidRoles } from '../auth/interfaces';
 @ApiTags('Cursos')
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly cursoService: CursoService) {}
+  constructor(private readonly cursoService: CursoService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)

@@ -7,7 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt-strategy';
-import { Cargo } from 'src/cargo/entities/cargo.entity';
+import { Cargo } from '../cargo/entities/cargo.entity';
 
 @Module({
   controllers: [AuthController],
@@ -34,4 +34,4 @@ import { Cargo } from 'src/cargo/entities/cargo.entity';
   ],
   exports: [TypeOrmModule, JwtModule, PassportModule, JwtStrategy, AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

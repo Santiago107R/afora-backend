@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ExcepcionService } from './excepcion.service';
 import { ExcepcionController } from './excepcion.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Clase } from 'src/clase/entities/clase.entity';
+import { Clase } from '../clase/entities/clase.entity';
 import { Excepcion } from './entities/excepcion.entity';
-import { User } from 'src/auth/entities/user.entity';
-import { Aula } from 'src/aula/entities/aula.entity';
-import { AuthModule } from 'src/auth/auth.module';
+import { User } from '../auth/entities/user.entity';
+import { Aula } from '../aula/entities/aula.entity';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [ExcepcionController],
@@ -16,4 +16,4 @@ import { AuthModule } from 'src/auth/auth.module';
     AuthModule,
   ],
 })
-export class ExcepcionModule {}
+export class ExcepcionModule { }

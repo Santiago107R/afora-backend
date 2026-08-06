@@ -11,15 +11,15 @@ import {
 import { CargoService } from './cargo.service';
 import { CreateCargoDto } from './dto/create-cargo.dto';
 import { UpdateCargoDto } from './dto/update-cargo.dto';
-import { Auth } from 'src/auth/decorators';
+import { Auth } from '../auth/decorators';
 import { ApiResponse } from '@nestjs/swagger';
-import { ValidRoles } from 'src/auth/interfaces';
+import { ValidRoles } from '../auth/interfaces';
 import { Cargo } from './entities/cargo.entity';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('cargo')
 export class CargoController {
-  constructor(private readonly cargoService: CargoService) {}
+  constructor(private readonly cargoService: CargoService) { }
 
   @Post()
   @Auth(ValidRoles.super_user, ValidRoles.admin)
