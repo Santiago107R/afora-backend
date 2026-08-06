@@ -91,5 +91,5 @@ export class Clase {
   endTime: string;
 
   @OneToMany(() => Excepcion, (excepcion) => excepcion.clase)
-  excepcion: Excepcion;
+  excepcion: Excepcion[];
 }
